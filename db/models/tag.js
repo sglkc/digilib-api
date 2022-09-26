@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Tag.init({
+    tag_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true
+    },
     item_id: DataTypes.INTEGER,
     tokoh: DataTypes.TEXT,
     tempat: DataTypes.TEXT,
@@ -21,7 +25,8 @@ module.exports = (sequelize, DataTypes) => {
     waktu: DataTypes.DATE
   }, {
     sequelize,
-    modelName: 'tag',
+    modelName: 'Tag',
+    tableName: 'tags'
   });
   return Tag;
 };

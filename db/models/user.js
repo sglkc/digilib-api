@@ -10,10 +10,19 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      this.belongsToMany(models.Item, {
+        as: 'bookmarks',
+        through: models.Bookmark,
+        otherKey: 'user_id',
+        foreignKey: 'user_id'
+      });
     }
   }
   User.init({
+    user_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true
+    },
     username: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
@@ -21,7 +30,8 @@ module.exports = (sequelize, DataTypes) => {
     tanggal_lahir: DataTypes.DATEONLY
   }, {
     sequelize,
-    modelName: 'user',
+    modelName: 'User',
+    tableName: 'users'
   });
   return User;
 };

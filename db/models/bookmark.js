@@ -14,11 +14,16 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Bookmark.init({
+    bookmark_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true
+    },
     user_id: DataTypes.INTEGER,
     item_id: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'bookmark',
+    modelName: 'Bookmark',
+    tableName: 'bookmarks'
   });
   return Bookmark;
 };
