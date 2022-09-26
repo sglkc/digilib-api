@@ -1,8 +1,8 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('categories', {
-      category_id: {
+    await queryInterface.createTable('tags', {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -16,9 +16,21 @@ module.exports = {
           key: 'item_id'
         }
       },
-      name: {
+      tokoh: {
         allowNull: false,
-        type: Sequelize.STRING(40)
+        type: Sequelize.TEXT('tiny')
+      },
+      tempat: {
+        allowNull: false,
+        type: Sequelize.TEXT('tiny')
+      },
+      peristiwa: {
+        allowNull: false,
+        type: Sequelize.TEXT('tiny')
+      },
+      waktu: {
+        allowNull: false,
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
@@ -33,6 +45,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('categories');
+    await queryInterface.dropTable('tags');
   }
 };

@@ -13,12 +13,12 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  bookmark.init({
+  Bookmark.init({
     user_id: DataTypes.INTEGER,
     item_id: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'Bookmark',
+    modelName: 'bookmark',
   });
   return Bookmark;
 };

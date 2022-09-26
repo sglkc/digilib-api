@@ -13,16 +13,19 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  item.init({
+  Item.init({
     title: DataTypes.STRING,
     author: DataTypes.STRING,
     description: DataTypes.TEXT,
     cover: DataTypes.TEXT,
     media: DataTypes.TEXT,
-    type: DataTypes.ENUM
+    type: {
+      type: DataTypes.ENUM,
+      values: ['audio', 'book', 'video']
+    }
   }, {
     sequelize,
-    modelName: 'Item',
+    modelName: 'item',
   });
   return Item;
 };

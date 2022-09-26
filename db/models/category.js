@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  category.init({
+  Category.init({
     item_id: DataTypes.INTEGER,
     name: DataTypes.STRING
   }, {
