@@ -15,8 +15,8 @@ fs
     routes.use(router);
   });
 
-routes.get('/', (req, res) => {
-  res.status(200).send('Hello World');
+routes.use((req, res) => {
+  return res.status(404).send('Invalid endpoint');
 });
 
 module.exports = routes;
