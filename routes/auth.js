@@ -38,7 +38,7 @@ routes.post('/register', (req, res) => {
 routes.post('/login', (req, res) => {
   const { email, password } = req.body;
 
-  User.findOne({ attributes: { exclude: 'password' }, where: email })
+  User.findOne({ where: { email }})
     .then((user) => {
       if (!user) return res.status(400).send({ message: 'email not found' });
 
@@ -48,9 +48,10 @@ routes.post('/login', (req, res) => {
           return res.status(400).send({ message: err });
         }
 
-        if (!invalid) return res.status(400).send({ message: 'invalid password' });
+        if (!result) return res.status(400).send({ message: 'invalid password' });
 
         delete user.password;
+        console.log(process.env.JWT_EXPIRES_IN)
 
         const token = jwt.sign(
           user.toJSON(),

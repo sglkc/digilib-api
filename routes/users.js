@@ -1,11 +1,12 @@
-const router = require('express').Router();
+const routes = require('express').Router();
+const auth = require('../middleware/authentication');
 const { User } = require('#models');
 
-router.use('/users', router);
-router.get('/', async (req, res) => {
+routes.use('/users', routes);
+routes.get('/', auth, async (req, res) => {
   const count = await User.count();
 
-  res.status(200).send('Users: ' + count);
+  return res.status(200).send('Users: ' + count);
 });
 
-module.exports = router;
+module.exports = routes;
