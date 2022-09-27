@@ -12,7 +12,6 @@ module.exports = {
      * }], {});
     */
     await queryInterface.bulkInsert('users', [{
-      username: 'test',
       email: 'test@gmail.com',
       password: '$2a$12$yczoFQ2w29s83rGtrwo6Wum1gSAAUZTiZN9DzS91k1kSXKm0wG6Ii', // password
       nama: 'Test User',
