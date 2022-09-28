@@ -1,12 +1,10 @@
 require('dotenv').config();
-const routes = require('express').Router();
+const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('#models');
 
-routes.use('/auth', routes);
-
-routes.post('/register', (req, res) => {
+router.post('/register', (req, res) => {
   const { nama, email, password, tanggal_lahir } = req.body;
 
   bcrypt.genSalt(10, (err, salt) => {
@@ -17,10 +15,8 @@ routes.post('/register', (req, res) => {
 
       User.create({ nama, email, password, tanggal_lahir })
         .then((user) => {
-          delete user.password;
-
           const token = jwt.sign(
-            user.toJSON(),
+            user.user_id,
             process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_EXPIRES_IN }
           );
@@ -35,7 +31,7 @@ routes.post('/register', (req, res) => {
   });
 });
 
-routes.post('/login', (req, res) => {
+router.post('/login', (req, res) => {
   const { email, password } = req.body;
 
   User.findOne({ where: { email }})
@@ -50,11 +46,8 @@ routes.post('/login', (req, res) => {
 
         if (!result) return res.status(400).send({ message: 'invalid password' });
 
-        delete user.password;
-        console.log(process.env.JWT_EXPIRES_IN)
-
         const token = jwt.sign(
-          user.toJSON(),
+          { user_id: user.user_id },
           process.env.JWT_SECRET,
           { expiresIn: process.env.JWT_EXPIRES_IN }
         );
@@ -64,8 +57,11 @@ routes.post('/login', (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      return res.status(400).send({ message: err });
+      return res.status(400).send({ message: err.errors[0].message });
     });
 });
 
-module.exports = routes;
+module.exports = {
+  endpoint: '/auth',
+  router
+};

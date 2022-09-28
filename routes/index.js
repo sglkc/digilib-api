@@ -11,8 +11,8 @@ fs
     return (file.indexOf('.') !== 0) && (file !== 'index.js') && (file.endsWith('.js'));
   })
   .forEach(file => {
-    const router = require(path.join(__dirname, file));
-    routes.use(router);
+    const { endpoint, router } = require(path.join(__dirname, file));
+    routes.use(endpoint, router);
   });
 
 routes.use((req, res) => {

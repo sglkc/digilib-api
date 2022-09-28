@@ -15,7 +15,7 @@ routes.use((req, res, next) => {
   if (!token) return res.status(401).send({ message: 'token not set' });
 
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.status(401).send({ message: err });
+    if (err) return res.status(401).send({ message: err.message });
 
     delete user.iat;
     delete user.exp;
@@ -24,7 +24,7 @@ routes.use((req, res, next) => {
       .then(() => next())
       .catch((err) => {
         console.error(err);
-        return res.status(401).send({ message: err });
+        return res.status(401).send({ message: err.errors[0].message });
       });
   });
 });
