@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Category.init({
     category_id: {
+      autoIncrement: true,
       type: DataTypes.INTEGER,
       primaryKey: true
     },

@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Tag.init({
     tag_id: {
+      autoIncrement: true,
       type: DataTypes.INTEGER,
       primaryKey: true
     },

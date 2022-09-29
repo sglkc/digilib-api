@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.init({
     user_id: {
+      autoIncrement: true,
       type: DataTypes.INTEGER,
       primaryKey: true
     },

@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Item.init({
     item_id: {
+      autoIncrement: true,
       type: DataTypes.INTEGER,
       primaryKey: true
     },

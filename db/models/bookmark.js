@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Bookmark.init({
     bookmark_id: {
+      autoIncrement: true,
       type: DataTypes.INTEGER,
       primaryKey: true
     },
