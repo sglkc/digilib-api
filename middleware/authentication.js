@@ -14,13 +14,12 @@ routes.use((req, res, next) => {
 
   if (!token) return res.status(401).send({ message: 'token not set' });
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, { user_id }) => {
     if (err) return res.status(401).send({ message: err.message });
 
-    delete user.iat;
-    delete user.exp;
+    res.locals.user_id = user_id;
 
-    User.findOne({ where: { ...user }})
+    User.findOne({ where: { user_id }})
       .then(() => next())
       .catch((err) => {
         console.error(err);
