@@ -44,12 +44,41 @@ router.post('/', (req, res) => {
 
       await item.createTag({ item_id, ...tag });
 
-      return res.status(200).send({ message: 'item addded', result: item.toJSON() });
+      return res.status(200).send(
+        { message: 'item addded', result: item.toJSON() }
+      );
     })
     .catch((err) => {
       console.error(err);
       return res.status(400).send({ message: err });
     });
+});
+
+router.patch('/:item_id', async (req, res) => {
+  const { item_id } = req.params;
+  const {
+    title, author, description, media, cover, type, categories, tag
+  } = req.body;
+
+
+  try {
+    const item = await Item.findByPk(item_id);
+
+    await item.update({ title, author, description, media, cover, type });
+    await Tag.update({ item_id, ...tag }, { where: { item_id }});
+    await Category.destroy({ where: { item_id }});
+
+    for (const category of categories) {
+      await item.createCategory({ item_id, name: category });
+    }
+
+    return res.status(200).send(
+      { message: 'item updated', result: item.toJSON() }
+    );
+  } catch (err) {
+    console.error(err);
+    return res.status(400).send({ message: err });
+  }
 });
 
 router.delete('/:item_id', async (req, res) => {
