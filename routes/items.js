@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const auth = require('../middleware/authentication');
-const path = require('path');
 const { Category, Item, Tag } = require('#models');
 
 router.use(auth);
