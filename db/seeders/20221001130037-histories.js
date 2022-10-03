@@ -11,7 +11,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('bookmarks', [
+    await queryInterface.bulkInsert('histories', [
       {
         user_id: 1,
         item_id: 3
@@ -19,7 +19,7 @@ module.exports = {
       {
         user_id: 1,
         item_id: 1
-      }
+      },
       {
         user_id: 1,
         item_id: 2
