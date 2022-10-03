@@ -5,15 +5,11 @@ const { User } = require('#models');
 
 router.use(auth);
 
-router.get('/:id', (req, res) => {
-  const { id } = req.params;
-
-  if (res.locals.user_id != id) {
-    return res.status(403).send({ message: 'user not accessible' });
-  }
+router.get('/', (req, res) => {
+  const { user_id } = res.locals;
 
   User.findByPk(
-    id,
+    user_id,
     { attributes: { exclude: 'password' }, rejectOnEmpty: true }
   )
     .then((user) => {
@@ -24,15 +20,10 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.patch('/:id', async (req, res) => {
+router.patch('/', async (req, res) => {
   const { nama, email, password, tanggal_lahir } = req.body;
-  const { id } = req.params;
-
-  if (res.locals.user_id != id) {
-    return res.status(403).send({ message: 'user not accessible' });
-  }
-
-  const user = await User.findByPk(id);
+  const { user_id } = res.locals;
+  const user = await User.findByPk(user_id);
 
   bcrypt.compare(password, user.password, (err, result) => {
     if (err) {
@@ -60,15 +51,10 @@ router.patch('/:id', async (req, res) => {
   });
 });
 
-router.patch('/:id/password', async (req, res) => {
+router.patch('/password', async (req, res) => {
   const { password, old_password } = req.body;
-  const { id } = req.params;
-
-  if (res.locals.user_id != id) {
-    return res.status(403).send({ message: 'user not accessible' });
-  }
-
-  const user = await User.findByPk(id);
+  const { user_id } = res.locals;
+  const user = await User.findByPk(user_id);
 
   bcrypt.compare(old_password, user.password, (err, result) => {
     if (err) {
