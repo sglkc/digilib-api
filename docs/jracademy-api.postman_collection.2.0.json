@@ -1,0 +1,600 @@
+{
+	"info": {
+		"_postman_id": "edf9bb40-1d75-4308-bc94-3f937c8798c7",
+		"name": "jracademy-api",
+		"description": "Dokumentasi ini berisi endpoint yang tersedia di jracademy-api lengkap beserta dengan response-nya.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "20300240"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json();",
+									"",
+									"pm.variables.set('token', json.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nama\": \"{{nama}}\",\n    \"password\": \"{{password}}\",\n    \"email\": \"{{email}}\",\n    \"tanggal_lahir\": \"{{tanggal_lahir}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/auth/register",
+						"description": "Endpoint `POST /auth/register` untuk mendaftarkan user baru. Untuk mengganti user, ubah variable di folder jracademy.\n\n### Response:\n\n``` json\n{\n    \"message\": \"Pesan sukses atau error\",\n    \"token\": \"Jika sukses akan memberikan token JWT\"\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json();",
+									"",
+									"pm.collectionVariables.set('token', json.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/auth/login",
+						"description": "Endpoint `POST /auth/login` untuk mendapatkan token JWT user yang sudah terdaftar.\n\n### Response:\n\n``` json\n{\n    \"message\": \"Pesan sukses atau error\",\n    \"token\": \"Jika sukses akan memberikan token JWT\"\n}\n\n```"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoint `/auth` digunakan untuk keperluan **register** dan **login** user."
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/users/",
+						"description": "Endpoint `GET /users/` untuk mendapatkan user yang dipakai.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan objek user\"\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const date = new Date().toISOString().slice(0, 10);",
+									"",
+									"pm.environment.set('currentDate', date);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nama\": \"{{nama}} Edited\",\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\",\n    \"tanggal_lahir\": \"{{currentDate}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/users/",
+						"description": "Endpoint `PATCH /users/` untuk memperbarui user yang dipakai.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\",\n  \"result\": \"Jika sukses akan memberikan objek user\"\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "password",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"{{password}}\",\n    \"old_password\": \"{{password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/users/password",
+						"description": "Endpoint `PATCH /users/password` untuk memperbarui password user yang dipakai.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\"\n}\n\n```"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoint `/users` digunakan untuk mendapatkan informasi user dan memperbarui user. Setiap request wajib mempunyai header Authorization berisi Bearer token JWT untuk user yang ingin dimodifikasi.",
+			"auth": {
+				"type": "bearer",
+				"bearer": {
+					"token": "{{token}}"
+				}
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "items",
+			"item": [
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/items/",
+						"description": "Endpoint `GET /items/` untuk mendapatkan semua item dalam database.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan array dari objek item\",\n  \"count\": \"Jika sukses akan memberikan jumlah item\"\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "getId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/items/{{item_id}}",
+						"description": "Endpoint `GET /items/:item_id` untuk mendapatkan item menggunakan id.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan objek item\"\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json();",
+									"",
+									"pm.collectionVariables.set('item_id', json.result.item_id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"{{$randomLoremWords}}\",\n    \"author\": \"{{$randomFullName}}\",\n    \"description\": \"{{$randomLoremSentences}}\",\n    \"media\": \"{{$randomImageUrl}}\",\n    \"cover\": \"{{$randomImageUrl}}\",\n    \"categories\": [\n        \"{{$randomWord}}\",\n        \"{{$randomWord}}\"\n    ],\n    \"tag\": {\n        \"tokoh\": \"{{$randomFullName}}\",\n        \"tempat\": \"{{$randomCity}}\",\n        \"peristiwa\": \"{{$randomLoremSentence}}\",\n        \"waktu\": \"2012-12-31\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/items/",
+						"description": "Endpoint `POST /items/` untuk menambahkan item.  \n\n### Response\n\n``` json\n{\n   \"message\": \"Pesan sukses atau error\",\n   \"result\": \"Jika sukses memberikan objek item\"\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"{{$randomLoremWords}}\",\n    \"author\": \"{{$randomFullName}}\",\n    \"description\": \"{{$randomLoremSentences}}\",\n    \"media\": \"{{$randomImageUrl}}\",\n    \"cover\": \"{{$randomImageUrl}}\",\n    \"categories\": [\n        \"{{$randomWord}}\",\n        \"{{$randomWord}}\"\n    ],\n    \"tag\": {\n        \"tokoh\": \"{{$randomFullName}}\",\n        \"tempat\": \"{{$randomCity}}\",\n        \"peristiwa\": \"{{$randomLoremSentence}}\",\n        \"waktu\": \"2012-12-31\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/items/{{item_id}}",
+						"description": "Endpoint `PATCH /items/:item_id` untuk memperbarui item.\n\n### Response\n\n``` json\n{\n   \"message\": \"Pesan sukses atau error\",\n   \"result\": \"Jika sukses memberikan objek item\"\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{base_url}}/items/{{item_id}}",
+						"description": "Endpoint `DELETE /items/:item_id` untuk menghapus item menggunakan id.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\"\n}\n\n```"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoint `/items` digunakan untuk mendapatkan item dan memperbarui item. Setiap request wajib mempunyai header Authorization berisi Bearer token JWT.\n\nRequest selain `GET` user harus menjadi admin.",
+			"auth": {
+				"type": "bearer",
+				"bearer": {
+					"token": "{{token}}"
+				}
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "bookmarks",
+			"item": [
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/bookmarks/",
+						"description": "Endpoint `GET /bookmarks/` untuk mendapatkan semua item yang di bookmark oleh user.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan array dari objek item\"\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "getId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/bookmarks/{{item_id}}",
+						"description": "Endpoint `GET /bookmarks/:item_id` untuk mendapatkan apakah user mempunyai bookmark item menggunakan id.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan boolean jika user bookmark\"\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "add",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/bookmarks/{{item_id}}",
+						"description": "Endpoint `POST /bookmarks/:item_id` untuk menambahkan item ke bookmark user.\n\n### Response\n\n``` json\n{\n   \"message\": \"Pesan sukses atau error\",\n   \"result\": \"Jika sukses memberikan objek item\"\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "remove",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{base_url}}/bookmarks/{{item_id}}",
+						"description": "Endpoint `DELETE /bookmarks/:item_id` untuk menghapus item dari bookmark user menggunakan id.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\",\n  \"result\": \"Jika sukses memberikan value true\"\n}\n\n```"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoint `/bookmarks` digunakan untuk mendapatkan bookmark dari user dan juga memperbarui bookmark. Setiap request wajib mempunyai header Authorization berisi Bearer token JWT untuk user yang ingin diubah bookmark-nya.",
+			"auth": {
+				"type": "bearer",
+				"bearer": {
+					"token": "{{token}}"
+				}
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "histories",
+			"item": [
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/histories/",
+						"description": "Endpoint `GET /histories/` untuk mendapatkan semua item yang telah dibuka oleh user.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan array dari objek item\"\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "add",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/histories/{{item_id}}",
+						"description": "Endpoint `POST /histories/:item_id` untuk menambahkan item ke history user.\n\n### Response\n\n``` json\n{\n   \"message\": \"Pesan sukses atau error\",\n   \"result\": \"Jika sukses memberikan objek history\"\n}\n\n```"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoint `/histories` digunakan untuk mendapatkan history dari user dan juga menambahkan history. Setiap request wajib mempunyai header Authorization berisi Bearer token JWT untuk user yang ingin ubah history.",
+			"auth": {
+				"type": "bearer",
+				"bearer": {
+					"token": "{{token}}"
+				}
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "files",
+			"item": [
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/files/cover/placeholder-1.jpg",
+						"description": "Endpoint `/files/:foldername/:filename` untuk mendapatkan file pada folder. Folder ada dua yaitu `cover` dan `media`. Sedangkan file harus diupload sebelumnya.\n\n### Response\n\nBerupa file atau json dengan format\n\n``` json\n{\n  \"message\": \"Pesan error\"\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "cover",
+									"type": "file",
+									"src": "/home/sglkc/web/jracademy/jracademy-api/static/cover/13563593.jpg"
+								},
+								{
+									"key": "media",
+									"type": "file",
+									"src": "/home/sglkc/web/jracademy/jracademy-api/static/media/Placeholder.pdf"
+								}
+							]
+						},
+						"url": "{{base_url}}/files",
+						"description": "Endpoint `POST /files` untuk mengupload file cover atau media. Auth menggunakan Bearer Token dan user harus seorang admin. **Body yang dipakai multipart/form-data.**\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\"\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "cover",
+									"type": "file",
+									"src": "/home/sglkc/web/jracademy/jracademy-api/static/cover/13563593.jpg"
+								},
+								{
+									"key": "media",
+									"type": "file",
+									"src": "/home/sglkc/web/jracademy/jracademy-api/static/media/Placeholder.pdf"
+								}
+							]
+						},
+						"url": "{{base_url}}/files/media/Placeholder.pdf",
+						"description": "Endpoint `DELETE /files/:foldername/:filename` untuk menghapus item yang telah disimpan. Auth menggunakan Bearer Token dan user harus seorang admin. Body kosong.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\"\n}\n\n```"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoint `/files` digunakan untuk mengunggah file cover dan media untuk item pada database. Auth menggunakan Bearer Token.\n\nRequest selain `GET` user harus menjadi admin.",
+			"auth": {
+				"type": "bearer",
+				"bearer": {
+					"token": "{{token}}"
+				}
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:5000",
+			"type": "string"
+		},
+		{
+			"key": "nama",
+			"value": "Registered User",
+			"type": "string"
+		},
+		{
+			"key": "email",
+			"value": "testemail@email.com",
+			"type": "string"
+		},
+		{
+			"key": "password",
+			"value": "testpassword",
+			"type": "string"
+		},
+		{
+			"key": "tanggal_lahir",
+			"value": "2005-12-31",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "item_id",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}
