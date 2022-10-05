@@ -9,14 +9,14 @@ const storage = multer.diskStorage({
     cb(null, path.join(__dirname, '../static', file.fieldname));
   },
   filename: function (req, file, cb) {
-    const filename = (Date.now() + '-' + file.originalname).replace(/ /g, '');
+    const filename = file.originalname.replace(/ /g, '');
     cb(null, filename);
   }
 });
 
 const upload = multer({ storage });
 
-// router.use(auth);
+router.use(auth);
 
 router.get('/:foldername/:filename', (req, res) => {
   const { foldername, filename } = req.params;
@@ -58,6 +58,7 @@ router.delete('/:foldername/:filename', (req, res) => {
       console.error(err);
       return res.status(400).send({ message: err });
     }
+
     return res.status(200).send({ message: 'file deleted' });
   });
 });
