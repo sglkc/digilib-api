@@ -25,6 +25,11 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATEONLY
       },
+      is_admin: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
       createdAt: {
         allowNull: false,
         defaultValue: Sequelize.fn('now'),

@@ -2,6 +2,7 @@ const express = require('express');
 const { unlink } = require('fs');
 const path = require('path');
 const multer = require('multer');
+const admin = require('../middleware/admin');
 const auth = require('../middleware/authentication');
 const router = express.Router();
 const storage = multer.diskStorage({
@@ -37,6 +38,7 @@ router.get('/:foldername/:filename', (req, res) => {
 
 router.post(
   '/',
+  admin,
   upload.fields([
     { name: 'cover', maxCount: 1 },
     { name: 'media', maxCount: 1 }
@@ -46,7 +48,7 @@ router.post(
   }
 );
 
-router.delete('/:foldername/:filename', (req, res) => {
+router.delete('/:foldername/:filename', admin, (req, res) => {
   const { foldername, filename } = req.params;
 
   if (!(['cover', 'media'].includes(foldername))) {

@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const admin = require('../middleware/admin');
 const auth = require('../middleware/authentication');
 const { Category, Item, Tag } = require('#models');
 
@@ -28,7 +29,7 @@ router.get('/:item_id', (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
+router.post('/', admin, (req, res) => {
   const {
     title, author, description, media, cover, type, categories, tag
   } = req.body;
@@ -53,7 +54,7 @@ router.post('/', (req, res) => {
     });
 });
 
-router.patch('/:item_id', async (req, res) => {
+router.patch('/:item_id', admin, async (req, res) => {
   const { item_id } = req.params;
   const {
     title, author, description, media, cover, type, categories, tag
@@ -80,7 +81,7 @@ router.patch('/:item_id', async (req, res) => {
   }
 });
 
-router.delete('/:item_id', async (req, res) => {
+router.delete('/:item_id', admin, async (req, res) => {
   const { item_id } = req.params;
   const count = await Item.count({ where: { item_id }});
 

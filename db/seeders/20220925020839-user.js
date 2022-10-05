@@ -12,10 +12,11 @@ module.exports = {
      * }], {});
     */
     await queryInterface.bulkInsert('users', [{
-      email: 'test@gmail.com',
+      email: 'admin@gmail.com',
       password: '$2a$12$yczoFQ2w29s83rGtrwo6Wum1gSAAUZTiZN9DzS91k1kSXKm0wG6Ii', // password
-      nama: 'Test User',
-      tanggal_lahir: '2000-12-31'
+      nama: 'Admin',
+      tanggal_lahir: '2000-12-31',
+      is_admin: true
     }], {});
   },
 

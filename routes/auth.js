@@ -16,7 +16,7 @@ router.post('/register', (req, res) => {
       User.create({ nama, email, password, tanggal_lahir })
         .then((user) => {
           const token = jwt.sign(
-            user.user_id,
+            { user_id: user.user_id },
             process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_EXPIRES_IN }
           );
