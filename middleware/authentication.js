@@ -6,13 +6,15 @@ const { User } = require('#models');
 routes.use((req, res, next) => {
   const { authorization } = req.headers;
 
-  if (!authorization) {
-    return res.status(401).send({ message: 'authorization header not set' });
+  if (!authorization && !req.query.token) {
+    return res.status(401).send({
+      message: 'authorization header or token query not set'
+    });
   }
 
-  const [, token] = authorization.split(' ');
+  const token = req.query.token || authorization.replace('Bearer ', '');
 
-  if (!token) return res.status(401).send({ message: 'token not set' });
+  if (!token) return res.status(401).send({ message: 'cannot get token' });
 
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) return res.status(401).send({ message: err.message });
