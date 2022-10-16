@@ -12,7 +12,10 @@ app.options('*', cors());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
-app.use(routes);
+app.use(process.env.PREFIX, routes);
+app.use((req, res) => {
+  return res.status(404).send({ message: 'invalid endpoint' });
+});
 
 app.listen(process.env.PORT, () => {
   console.log(`Listening to port ${process.env.PORT}`);

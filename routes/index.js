@@ -15,8 +15,8 @@ fs
     routes.use(endpoint, router);
   });
 
-routes.use((req, res) => {
-  return res.status(404).send('Invalid endpoint');
-});
+routes.get('/', (req, res) => {
+  return res.status(200).send({ message: 'root endpoint of the api' });
+})
 
 module.exports = routes;
