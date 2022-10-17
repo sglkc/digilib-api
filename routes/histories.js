@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
     return res.status(200).send({ result: histories });
   } catch (err) {
     console.error(err);
-    return res.status(400).send({ message: err });
+    return res.status(500).send({ message: err });
   }
 });
 
@@ -29,7 +29,7 @@ router.post('/:item_id', async (req, res) => {
     return res.status(200).send({ message: 'added to history', result });
   } catch (err) {
     console.error(err);
-    return res.status(400).send({ message: err });
+    return res.status(500).send({ message: err });
   }
 });
 

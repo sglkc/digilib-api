@@ -46,7 +46,7 @@ router.patch('/', async (req, res) => {
       })
       .catch((err) => {
         console.error(err);
-        return res.status(400).send({ message: err.errors[0].message });
+        return res.status(500).send({ message: err });
       });
   });
 });
@@ -65,10 +65,10 @@ router.patch('/password', async (req, res) => {
     if (!result) return res.status(400).send({ message: 'invalid password' });
 
     bcrypt.genSalt(10, (err, salt) => {
-      if (err) return res.status(400).send({ message: err });
+      if (err) return res.status(500).send({ message: err });
 
       bcrypt.hash(password, salt, (err, password) => {
-        if (err) return res.status(400).send({ message: err });
+        if (err) return res.status(500).send({ message: err });
 
         user.update({ password })
           .then(() => {
@@ -76,7 +76,7 @@ router.patch('/password', async (req, res) => {
           })
           .catch((err) => {
             console.error(err);
-            return res.status(400).send({ message: err.errors[0].message });
+            return res.status(500).send({ message: err });
           });
       });
     });

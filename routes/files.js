@@ -58,7 +58,7 @@ router.delete('/:foldername/:filename', admin, (req, res) => {
   unlink(path.join(__dirname, '../static', foldername, filename), (err) => {
     if (err) {
       console.error(err);
-      return res.status(400).send({ message: err });
+      return res.status(500).send({ message: err });
     }
 
     return res.status(200).send({ message: 'file deleted' });

@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
     return res.status(200).send({ result: bookmarks });
   } catch (err) {
     console.error(err);
-    return res.status(400).send({ message: err });
+    return res.status(500).send({ message: err });
   }
 });
 
@@ -29,7 +29,7 @@ router.get('/:item_id', async (req, res) => {
     return res.status(200).send({ result });
   } catch (err) {
     console.error(err);
-    return res.status(400).send({ message: err });
+    return res.status(500).send({ message: err });
   }
 });
 
@@ -49,7 +49,7 @@ router.post('/:item_id', async (req, res) => {
       return res.status(200).send({ message: 'item already bookmarked' });
     }
 
-    return res.status(400).send({ message: err });
+    return res.status(500).send({ message: err });
   }
 });
 
@@ -71,7 +71,7 @@ router.delete('/:item_id', async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    return res.status(400).send({ message: err });
+    return res.status(500).send({ message: err });
   }
 });
 

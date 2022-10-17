@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      return res.status(400).send({ message: err });
+      return res.status(500).send({ message: err });
     });
 });
 
@@ -25,7 +25,7 @@ router.get('/:item_id', (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      return res.status(400).send({ message: err });
+      return res.status(500).send({ message: err });
     });
 });
 
@@ -50,7 +50,7 @@ router.post('/', admin, (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      return res.status(400).send({ message: err });
+      return res.status(500).send({ message: err });
     });
 });
 
@@ -77,7 +77,7 @@ router.patch('/:item_id', admin, async (req, res) => {
     );
   } catch (err) {
     console.error(err);
-    return res.status(400).send({ message: err });
+    return res.status(500).send({ message: err });
   }
 });
 
@@ -95,7 +95,7 @@ router.delete('/:item_id', admin, async (req, res) => {
     return res.status(200).send({ message: 'item deleted' });
   } catch (err) {
     console.error(err);
-    return res.status(400).send({ message: err });
+    return res.status(500).send({ message: err });
   };
 });
 
