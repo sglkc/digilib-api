@@ -21,7 +21,11 @@ router.post('/register', (req, res) => {
             { expiresIn: process.env.JWT_EXPIRES_IN }
           );
 
-          return res.status(200).send({ message: 'user registered', token });
+          return res.status(200).send({
+            message: 'USER_REGISTERED',
+            result: user.toJSON(),
+            token
+          });
         })
         .catch((err) => {
           const message = err.name === 'SequelizeUniqueConstraintError'
@@ -55,7 +59,11 @@ router.post('/login', (req, res) => {
           { expiresIn: process.env.JWT_EXPIRES_IN }
         );
 
-        return res.status(200).send({ message: 'user authenticated', token });
+        return res.status(200).send({
+          message: 'USER_AUTHENTICATED',
+          result: user.toJSON(),
+          token
+        });
       });
     })
     .catch((err) => {

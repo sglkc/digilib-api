@@ -3,9 +3,11 @@ const express = require('express');
 const bodyparser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
+const morgan = require('morgan');
 const routes = require('./routes');
 const app = express();
 
+if (process.env.NODE_ENV !== 'production') app.use(morgan('dev'));
 app.use(cors());
 app.use(helmet());
 app.options('*', cors());
