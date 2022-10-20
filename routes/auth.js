@@ -21,9 +21,15 @@ router.post('/register', (req, res) => {
             { expiresIn: process.env.JWT_EXPIRES_IN }
           );
 
+          const json = user.toJSON();
+
+          delete json.password;
+          delete json.createdAt;
+          delete json.updatedAt;
+
           return res.status(200).send({
             message: 'USER_REGISTERED',
-            result: user.toJSON(),
+            result: json,
             token
           });
         })
@@ -59,9 +65,15 @@ router.post('/login', (req, res) => {
           { expiresIn: process.env.JWT_EXPIRES_IN }
         );
 
+        const json = user.toJSON();
+
+        delete json.password;
+        delete json.createdAt;
+        delete json.updatedAt;
+
         return res.status(200).send({
           message: 'USER_AUTHENTICATED',
-          result: user.toJSON(),
+          result: json,
           token
         });
       });
