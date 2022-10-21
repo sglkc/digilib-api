@@ -6,9 +6,18 @@ const { Category, Item, Tag } = require('#models');
 router.use(auth);
 
 router.get('/', (req, res) => {
-  Item.findAndCountAll({ include: [Category, Tag] })
+  const { page, limit } = req.query;
+  const perPage = parseInt(limit) || 10;
+  const offset = (page * perPage - perPage) || 0;
+
+  Item.findAndCountAll({
+    distinct: true,
+    include: [Category],
+    offset,
+    limit: perPage
+  })
     .then(({ count, rows }) => {
-      return res.status(200).send({ result: rows, count });
+      return res.status(200).send({ result: rows, count: count });
     })
     .catch((err) => {
       console.error(err);
@@ -19,7 +28,7 @@ router.get('/', (req, res) => {
 router.get('/:item_id', (req, res) => {
   const { item_id } = req.params;
 
-  Item.findByPk(item_id, { include: [Category, Tag] })
+  Item.findByPk(item_id, { include: [Category] })
     .then((item) => {
       return res.status(200).send({ result: item.toJSON() });
     })

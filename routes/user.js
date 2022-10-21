@@ -10,7 +10,10 @@ router.get('/', (req, res) => {
 
   User.findByPk(
     user_id,
-    { attributes: { exclude: 'password' }, rejectOnEmpty: true }
+    {
+      attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
+      rejectOnEmpty: true
+    }
   )
     .then((user) => {
       return res.status(200).send({ result: user.toJSON() });
@@ -30,6 +33,8 @@ router.patch('/', async (req, res) => {
         const json = user.toJSON();
 
         delete json.password;
+        delete json.createdAt;
+        delete json.updatedAt;
 
         return res.status(200).send({
           message: 'USER_UPDATED',
