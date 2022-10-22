@@ -6,7 +6,7 @@ const { User } = require('#models');
 routes.use(authentication, (req, res, next) => {
   User.count({ where: { user_id: res.locals.user_id, is_admin: 1 }})
     .then((count) => {
-      if (!count) return res.status(403).send({ message: 'user is not admin' });
+      if (!count) return res.status(403).send({ message: 'NOT_ADMIN' });
       next();
     })
     .catch((err) => {

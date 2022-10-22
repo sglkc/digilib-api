@@ -8,33 +8,35 @@ router.use(auth);
 router.get('/', (req, res) => {
   const { page, limit } = req.query;
   const perPage = parseInt(limit) || 10;
-  const offset = (page * perPage - perPage) || 0;
+  const offset = (parseInt(page) * perPage - perPage) || 0;
+
+  if (offset < 0) return res.status(400).send({ message: 'INVALID_PAGE' });
 
   Item.findAndCountAll({
+    col: 'Item.item_id',
     distinct: true,
-    include: [Category],
-    offset,
-    limit: perPage
+    limit: perPage,
+    offset
   })
     .then(({ count, rows }) => {
+      if (!rows.length) throw new Error();
+
       return res.status(200).send({ result: rows, count: count });
     })
     .catch((err) => {
-      console.error(err);
-      return res.status(500).send({ message: err });
+      return res.status(400).send({ message: 'PAGE_NOT_FOUND' });
     });
 });
 
 router.get('/:item_id', (req, res) => {
   const { item_id } = req.params;
 
-  Item.findByPk(item_id, { include: [Category] })
+  Item.scope('withTags').findByPk(item_id)
     .then((item) => {
       return res.status(200).send({ result: item.toJSON() });
     })
     .catch((err) => {
-      console.error(err);
-      return res.status(500).send({ message: err });
+      return res.status(400).send({ message: 'ITEM_NOT_FOUND' });
     });
 });
 
@@ -54,7 +56,7 @@ router.post('/', admin, (req, res) => {
       await item.createTag({ item_id, ...tag });
 
       return res.status(200).send(
-        { message: 'item addded', result: item.toJSON() }
+        { message: 'ITEM_ADDED', result: item.toJSON() }
       );
     })
     .catch((err) => {
@@ -69,7 +71,6 @@ router.patch('/:item_id', admin, async (req, res) => {
     title, author, description, media, cover, type, categories, tag
   } = req.body;
 
-
   try {
     const item = await Item.findByPk(item_id);
 
@@ -82,7 +83,7 @@ router.patch('/:item_id', admin, async (req, res) => {
     }
 
     return res.status(200).send(
-      { message: 'item updated', result: item.toJSON() }
+      { message: 'ITEM_UPDATED', result: item.toJSON() }
     );
   } catch (err) {
     console.error(err);
@@ -94,14 +95,14 @@ router.delete('/:item_id', admin, async (req, res) => {
   const { item_id } = req.params;
   const count = await Item.count({ where: { item_id }});
 
-  if (!count) return res.status(400).send({ message: 'item not found' });
+  if (!count) return res.status(400).send({ message: 'ITEM_NOT_FOUND' });
 
   try {
     await Category.destroy({ where: { item_id }});
     await Tag.destroy({ where: { item_id }});
     await Item.destroy({ where: { item_id }});
 
-    return res.status(200).send({ message: 'item deleted' });
+    return res.status(200).send({ message: 'ITEM_DELETED' });
   } catch (err) {
     console.error(err);
     return res.status(500).send({ message: err });

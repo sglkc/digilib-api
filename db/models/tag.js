@@ -25,6 +25,9 @@ module.exports = (sequelize, DataTypes) => {
     peristiwa: DataTypes.TEXT,
     waktu: DataTypes.DATE
   }, {
+    defaultScope: {
+      attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
+    },
     sequelize,
     modelName: 'Tag',
     tableName: 'tags'

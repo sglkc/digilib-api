@@ -16,7 +16,10 @@ router.get('/', (req, res) => {
     }
   )
     .then((user) => {
-      return res.status(200).send({ result: user.toJSON() });
+      return res.status(200).send({
+        message: 'USER_AUTHENTICATED',
+        result: user.toJSON()
+      });
     })
     .catch((err) => {
       return res.status(400).send({ message: 'USER_NOT_FOUND' });
@@ -30,15 +33,9 @@ router.patch('/', async (req, res) => {
   User.findByPk(user_id).then((user) => {
     user.update({ nama, email, tanggal_lahir })
       .then((user) => {
-        const json = user.toJSON();
-
-        delete json.password;
-        delete json.createdAt;
-        delete json.updatedAt;
-
         return res.status(200).send({
           message: 'USER_UPDATED',
-          result: json
+          result: user.toJSON()
         });
       })
       .catch((err) => {

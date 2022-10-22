@@ -30,6 +30,15 @@ module.exports = (sequelize, DataTypes) => {
       values: ['audio', 'book', 'video']
     }
   }, {
+    defaultScope: {
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      include: ['Categories']
+    },
+    scopes: {
+      withTags: {
+        include: ['Categories', 'Tag']
+      }
+    },
     sequelize,
     modelName: 'Item',
     tableName: 'items'

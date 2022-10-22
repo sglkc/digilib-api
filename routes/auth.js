@@ -34,11 +34,11 @@ router.post('/register', (req, res) => {
           });
         })
         .catch((err) => {
-          const message = err.name === 'SequelizeUniqueConstraintError'
-            ? 'EMAIL_DUPLICATE'
-            : err;
+          const isDuplicate = err.name === 'SequelizeUniqueConstraintError';
+          const message = isDuplicate ? 'EMAIL_DUPLICATE' : err;
+          const status = isDuplicate ? 400 : 500;
 
-          return res.status(500).send({ message });
+          return res.status(status).send({ message });
         });
     });
   });
@@ -47,7 +47,7 @@ router.post('/register', (req, res) => {
 router.post('/login', (req, res) => {
   const { email, password } = req.body;
 
-  User.findOne({ where: { email }})
+  User.unscoped().findOne({ where: { email }})
     .then((user) => {
       if (!user) return res.status(400).send({ message: 'EMAIL_NOT_FOUND' });
 

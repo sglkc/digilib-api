@@ -7,14 +7,12 @@ routes.use((req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization && !req.query.token) {
-    return res.status(401).send({
-      message: 'authorization header or token query not set'
-    });
+    return res.status(401).send({ message: 'NO_TOKEN' });
   }
 
   const token = req.query.token || authorization.replace('Bearer ', '');
 
-  if (!token) return res.status(401).send({ message: 'cannot get token' });
+  if (!token) return res.status(401).send({ message: 'INVALID_TOKEN' });
 
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) return res.status(401).send({ message: err.message });
@@ -25,7 +23,7 @@ routes.use((req, res, next) => {
       .then(() => next())
       .catch((err) => {
         console.error(err);
-        return res.status(401).send({ message: err.errors[0].message });
+        return res.status(401).send({ message: 'USER_NOT_FOUND' });
       });
   });
 });

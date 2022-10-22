@@ -22,6 +22,11 @@ module.exports = (sequelize, DataTypes) => {
     item_id: DataTypes.INTEGER,
     name: DataTypes.STRING
   }, {
+    defaultScope: {
+      attributes: {
+        exclude: ['createdAt', 'updatedAt']
+      },
+    },
     sequelize,
     modelName: 'Category',
     tableName: 'categories'

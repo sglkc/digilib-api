@@ -35,6 +35,9 @@ module.exports = (sequelize, DataTypes) => {
     nama: DataTypes.STRING,
     tanggal_lahir: DataTypes.DATEONLY
   }, {
+    defaultScope: {
+      attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
+    },
     sequelize,
     modelName: 'User',
     tableName: 'users'
