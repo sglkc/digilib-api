@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      this.hasOne(models.Item, { foreignKey: 'item_id' });
     }
   }
   History.init({
@@ -22,6 +22,9 @@ module.exports = (sequelize, DataTypes) => {
     user_id: DataTypes.NUMBER,
     item_id: DataTypes.NUMBER
   }, {
+    defaultScope: {
+      include: 'Item'
+    },
     sequelize,
     modelName: 'History',
     tableName: 'histories'

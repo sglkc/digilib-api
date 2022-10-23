@@ -24,6 +24,7 @@ router.get('/', (req, res) => {
       return res.status(200).send({ result: rows, count: count });
     })
     .catch((err) => {
+      console.error(err);
       return res.status(400).send({ message: 'PAGE_NOT_FOUND' });
     });
 });

@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      this.hasOne(models.Item, { foreignKey: 'item_id' });
     }
   }
   Bookmark.init({
@@ -22,6 +22,9 @@ module.exports = (sequelize, DataTypes) => {
     user_id: DataTypes.INTEGER,
     item_id: DataTypes.INTEGER
   }, {
+    defaultScope: {
+      include: 'Item'
+    },
     sequelize,
     modelName: 'Bookmark',
     tableName: 'bookmarks'
