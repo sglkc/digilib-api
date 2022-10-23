@@ -29,6 +29,7 @@
     "sequelize-cli": "^6.4.1"
   },
   "imports": {
-    "#models": "./db/models/index.js"
+    "#models": "./db/models/index.js",
+    "#middleware/*": "./middleware/*.js"
   }
 }

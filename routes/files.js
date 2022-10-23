@@ -2,8 +2,8 @@ const express = require('express');
 const { unlink } = require('fs');
 const path = require('path');
 const multer = require('multer');
-const admin = require('../middleware/admin');
-const auth = require('../middleware/authentication');
+const admin = require('#middleware/admin');
+const auth = require('#middleware/authentication');
 const router = express.Router();
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

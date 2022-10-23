@@ -1,6 +1,7 @@
-const Sequelize = require('sequelize');
+const { col, fn, literal } = require('sequelize');
 const router = require('express').Router();
-const auth = require('../middleware/authentication');
+const auth = require('#middleware/authentication');
+const includeBookmark = require('#middleware/bookmark');
 const { History, User } = require('#models');
 
 router.use(auth);
@@ -14,16 +15,27 @@ router.get('/', (req, res) => {
   if (offset < 0) return res.status(400).send({ message: 'INVALID_PAGE' });
 
   History.findAndCountAll({
+    attributes: {
+      include: [ includeBookmark(user_id, 'History.item_id') ],
+    },
     col: 'History.history_id',
     distinct: true,
+    order: [['history_id', 'DESC']],
     limit: perPage,
     offset,
     where: { user_id }
   })
     .then(({ count, rows }) => {
-      if (!rows.length) throw new Error();
+      const result = rows.map((row) => ({
+        ...row.Item.toJSON(),
+        Bookmark: row.get('Bookmark')
+      }));
 
-      return res.status(200).send({ result: rows, count });
+      if (!result.length) {
+        return res.status(400).send({ message: 'PAGE_EMPTY' });
+      }
+
+      return res.status(200).send({ result, count });
     })
     .catch((err) => {
       console.error(err);

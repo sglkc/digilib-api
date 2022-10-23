@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const auth = require('../middleware/authentication');
-const { Bookmark, User } = require('#models');
+const auth = require('#middleware/authentication');
+const { Bookmark } = require('#models');
 
 router.use(auth);
 
@@ -20,9 +20,16 @@ router.get('/', (req, res) => {
     where: { user_id }
   })
     .then(({ count, rows }) => {
-      if (!rows.length) throw new Error();
+      const result = rows.map((row) => ({
+        ...row.Item.toJSON(),
+        Bookmark: true
+      }));
 
-      return res.status(200).send({ result: rows, count });
+      if (!result.length) {
+        return res.status(400).send({ message: 'PAGE_EMPTY' });
+      }
+
+      return res.status(200).send({ result, count });
     })
     .catch((err) => {
       console.error(err);
@@ -30,61 +37,58 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:item_id', async (req, res) => {
+router.get('/:item_id', (req, res) => {
   const { item_id } = req.params;
   const { user_id } = res.locals;
 
-  try {
-    const user = await User.findByPk(user_id);
-    const result = await user.hasBookmark(item_id);
-
-    return res.status(200).send({ result });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).send({ message: err });
-  }
+  Bookmark.findOne({ where: { item_id, user_id } })
+    .then((bookmark) => {
+      return res.status(200).send({ result: !!bookmark });
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).send({ message: err });
+    });
 });
 
-router.post('/:item_id', async (req, res) => {
+router.post('/:item_id', (req, res) => {
   const { item_id } = req.params;
   const { user_id } = res.locals;
 
-  try {
-    const user = await User.findByPk(user_id);
-    const result = await user.addBookmark(item_id);
+  Bookmark.create({ item_id, user_id })
+    .then((result) => {
+      return res.status(200).send({ message: 'ADDED_BOOKMARK', result });
+    })
+    .catch((err) => {
+      console.error(err);
 
-    return res.status(200).send({ message: 'ADDED_BOOKMARK', result });
-  } catch (err) {
-    console.error(err);
-
-    switch(err.name) {
-      case 'SequelizeUniqueConstraintError':
-        return res.status(400).send({ message: 'ITEM_IS_BOOKMARKED' });
-      case 'SequelizeForeignKeyConstraintError':
-        return res.status(400).send({ message: 'ITEM_NOT_FOUND' });
-      default:
-        return res.status(500).send({ message: err });
-    }
-  }
+      switch(err.name) {
+        case 'SequelizeUniqueConstraintError':
+          return res.status(400).send({ message: 'ITEM_IS_BOOKMARKED' });
+        case 'SequelizeForeignKeyConstraintError':
+          return res.status(400).send({ message: 'ITEM_NOT_FOUND' });
+        default:
+          return res.status(500).send({ message: err });
+      }
+    });
 });
 
-router.delete('/:item_id', async (req, res) => {
+router.delete('/:item_id', (req, res) => {
   const { item_id } = req.params;
   const { user_id } = res.locals;
 
-  try {
-    const user = await User.findByPk(user_id);
-    const result = await user.removeBookmark(item_id);
+  Bookmark.destroy({ where: { item_id, user_id } })
+    .then((result) => {
+      if (!result) {
+        return res.status(200).send({ message: 'ITEM_NOT_BOOKMARKED' });
+      }
 
-    if (!result) {
-      return res.status(200).send({ message: 'ITEM_NOT_BOOKMARKED' });
-    }
-
-    return res.status(200).send({ message: 'ITEM_UNBOOKMARKED' });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).send({ message: err });
-  }
+      return res.status(200).send({ message: 'ITEM_UNBOOKMARKED' });
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).send({ message: err });
+    });
 });
 
 module.exports = {

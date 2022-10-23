@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.hasOne(models.Item, { foreignKey: 'item_id' });
+      this.hasOne(models.Item, { foreignKey: 'item_id', sourceKey: 'item_id' });
     }
   }
   Bookmark.init({

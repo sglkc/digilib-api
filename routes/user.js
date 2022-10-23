@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
-const auth = require('../middleware/authentication');
+const auth = require('#middleware/authentication');
 const { User } = require('#models');
 
 router.use(auth);

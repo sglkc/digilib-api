@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const auth = require('../middleware/authentication');
+const auth = require('#middleware/authentication');
 const { Category, Item } = require('#models');
 
 router.get('/', (req, res) => {

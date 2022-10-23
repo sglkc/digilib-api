@@ -34,11 +34,6 @@ module.exports = (sequelize, DataTypes) => {
       attributes: { exclude: ['createdAt', 'updatedAt'] },
       include: ['Categories']
     },
-    scopes: {
-      withTags: {
-        include: ['Categories', 'Tag']
-      }
-    },
     sequelize,
     modelName: 'Item',
     tableName: 'items'
