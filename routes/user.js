@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const auth = require('#middleware/authentication');
 const { User } = require('#models');
 
@@ -8,17 +9,18 @@ router.use(auth);
 router.get('/', (req, res) => {
   const { user_id } = res.locals;
 
-  User.findByPk(
-    user_id,
-    {
-      attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
-      rejectOnEmpty: true
-    }
-  )
+  User.findByPk(user_id, { rejectOnEmpty: true })
     .then((user) => {
+      const token = jwt.sign(
+        { user_id: user.user_id },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRES_IN }
+      );
+
       return res.status(200).send({
         message: 'USER_AUTHENTICATED',
-        result: user.toJSON()
+        result: user.toJSON(),
+        token
       });
     })
     .catch((err) => {
