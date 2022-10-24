@@ -28,7 +28,7 @@ router.get('/', (req, res) => {
     .then(({ count, rows }) => {
       const result = rows.map((row) => ({
         ...row.Item.toJSON(),
-        Bookmark: row.get('Bookmark')
+        Bookmark: Boolean(row.get('Bookmark'))
       }));
 
       if (!result.length) {

@@ -43,7 +43,8 @@ router.get('/:item_id', (req, res) => {
 
   Bookmark.findOne({ where: { item_id, user_id } })
     .then((bookmark) => {
-      return res.status(200).send({ result: !!bookmark });
+      const message = bookmark ? 'ADDED_BOOKMARK' : 'REMOVED_BOOKMARK';
+      return res.status(200).send({ message });
     })
     .catch((err) => {
       console.error(err);
@@ -80,10 +81,10 @@ router.delete('/:item_id', (req, res) => {
   Bookmark.destroy({ where: { item_id, user_id } })
     .then((result) => {
       if (!result) {
-        return res.status(200).send({ message: 'ITEM_NOT_BOOKMARKED' });
+        return res.status(400).send({ message: 'ITEM_NOT_BOOKMARKED' });
       }
 
-      return res.status(200).send({ message: 'ITEM_UNBOOKMARKED' });
+      return res.status(200).send({ message: 'REMOVED_BOOKMARK' });
     })
     .catch((err) => {
       console.error(err);

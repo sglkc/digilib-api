@@ -30,7 +30,12 @@ router.get('/', (req, res) => {
         return res.status(400).send({ message: 'PAGE_EMPTY' });
       }
 
-      return res.status(200).send({ result: rows, count: count });
+      const result = rows.map((row) => ({
+        ...row.toJSON(),
+        Bookmark: Boolean(row.get('Bookmark'))
+      }));
+
+      return res.status(200).send({ result, count });
     })
     .catch((err) => {
       console.error(err);
@@ -49,7 +54,12 @@ router.get('/:item_id', (req, res) => {
     include: ['Categories', 'Tag']
   })
     .then((item) => {
-      return res.status(200).send({ result: item.toJSON() });
+      const result = {
+        ...item.toJSON(),
+        Bookmark: Boolean(item.get('Bookmark'))
+      };
+
+      return res.status(200).send({ result });
     })
     .catch((err) => {
       return res.status(400).send({ message: 'ITEM_NOT_FOUND' });
