@@ -1,4 +1,4 @@
-const { literal } = require('sequelize')
+const { Op } = require('sequelize')
 const router = require('express').Router();
 const admin = require('#middleware/admin');
 const auth = require('#middleware/authentication');
@@ -8,7 +8,7 @@ const { Category, Item, Tag } = require('#models');
 router.use(auth);
 
 router.get('/', (req, res) => {
-  const { page, limit } = req.query;
+  const { limit, page, type } = req.query;
   const perPage = parseInt(limit) || 10;
   const offset = (parseInt(page) * perPage - perPage) || 0;
   const { user_id } = res.locals;
@@ -23,7 +23,9 @@ router.get('/', (req, res) => {
     distinct: true,
     limit: perPage,
     offset,
-    user_id
+    where: {
+      type: { [Op.like]: '%' + (type || '') + '%' }
+    }
   })
     .then(({ count, rows }) => {
       if (!rows.length) {
