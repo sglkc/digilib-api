@@ -1,24 +1,32 @@
+const { Op } = require('sequelize');
 const router = require('express').Router();
 const auth = require('#middleware/authentication');
-const { Bookmark } = require('#models');
+const { Bookmark, Item } = require('#models');
 
 router.use(auth);
 
 router.get('/', (req, res) => {
-  const { page, limit } = req.query;
+  const { limit, page, type } = req.query;
   const perPage = parseInt(limit) || 10;
   const offset = (parseInt(page) * perPage - perPage) || 0;
   const { user_id } = res.locals;
 
   if (offset < 0) return res.status(400).send({ message: 'INVALID_PAGE' });
 
-  Bookmark.findAndCountAll({
-    col: 'Bookmark.bookmark_id',
-    distinct: true,
-    limit: perPage,
-    offset,
-    where: { user_id }
-  })
+  Bookmark
+    .unscoped()
+    .findAndCountAll({
+      distinct: true,
+      include: {
+        model: Item,
+        where: {
+          type: { [Op.substring]: (type || '') }
+        }
+      },
+      limit: perPage,
+      offset,
+      where: { user_id }
+    })
     .then(({ count, rows }) => {
       const result = rows.map((row) => ({
         ...row.Item.toJSON(),

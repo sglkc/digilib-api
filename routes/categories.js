@@ -8,17 +8,14 @@ router.use(auth);
 
 router.get('/', (req, res) => {
   const { search } = req.query;
-  const searchArray = typeof(search) === 'object';
 
-  Category.findAll(
-    Object.assign({}, search && {
-      where: {
-        name: {
-          [searchArray ? Op.in : Op.like]: searchArray ? search : `%${search}%`
-        }
+  Category.findAll({
+    where: {
+      name: {
+        [Op.substring]: search
       }
-    })
-  )
+    }
+  })
     .then((rows) => {
       const mapped = rows.map(row => row.name);
       const result = [ ...new Set(mapped) ];
@@ -33,7 +30,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/items', (req, res) => {
-  const { page, limit, search } = req.query;
+  const { limit, page, search, type } = req.query;
   const perPage = parseInt(limit) || 5;
   const offset = (parseInt(page) * perPage - perPage) || 0;
   const { user_id } = res.locals;
@@ -46,7 +43,12 @@ router.get('/items', (req, res) => {
     },
     distinct: true,
     group: ['item_id'],
-    include: Item,
+    include: {
+      model: Item,
+      where: {
+        type: { [Op.substring]: (type || '') }
+      }
+    },
     limit: perPage,
     offset,
     where: {

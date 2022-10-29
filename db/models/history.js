@@ -22,9 +22,6 @@ module.exports = (sequelize, DataTypes) => {
     user_id: DataTypes.NUMBER,
     item_id: DataTypes.NUMBER
   }, {
-    defaultScope: {
-      include: 'Item'
-    },
     sequelize,
     modelName: 'History',
     tableName: 'histories'

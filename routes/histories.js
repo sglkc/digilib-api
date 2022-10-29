@@ -1,13 +1,13 @@
-const { col, fn, literal } = require('sequelize');
+const { Op } = require('sequelize');
 const router = require('express').Router();
 const auth = require('#middleware/authentication');
 const includeBookmark = require('#middleware/bookmark');
-const { History, User } = require('#models');
+const { History, Item, User } = require('#models');
 
 router.use(auth);
 
 router.get('/', (req, res) => {
-  const { page, limit } = req.query;
+  const { limit, page, type } = req.query;
   const perPage = parseInt(limit) || 10;
   const offset = (parseInt(page) * perPage - perPage) || 0;
   const { user_id } = res.locals;
@@ -18,8 +18,13 @@ router.get('/', (req, res) => {
     attributes: {
       include: [ includeBookmark(user_id, 'History.item_id') ],
     },
-    col: 'History.history_id',
     distinct: true,
+    include: {
+      model: Item,
+      where: {
+        type: { [Op.substring]: (type || '') }
+      }
+    },
     order: [['history_id', 'DESC']],
     limit: perPage,
     offset,

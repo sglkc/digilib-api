@@ -8,7 +8,7 @@ const { Category, Item, Tag } = require('#models');
 router.use(auth);
 
 router.get('/', (req, res) => {
-  const { limit, page, search, type } = req.query;
+  const { limit, order, page, search, type } = req.query;
   const perPage = parseInt(limit) || 10;
   const offset = (parseInt(page) * perPage - perPage) || 0;
   const { user_id } = res.locals;
@@ -23,6 +23,7 @@ router.get('/', (req, res) => {
     distinct: true,
     limit: perPage,
     offset,
+    order: [['item_id', order || 'ASC']],
     where: {
       title: { [Op.substring]: (search || '') },
       type: { [Op.substring]: (type || '') }
