@@ -70,29 +70,38 @@ router.get('/:item_id', (req, res) => {
     });
 });
 
-router.post('/', admin, (req, res) => {
+router.post('/', admin, async (req, res) => {
   const {
     title, author, description, media, cover, type, categories, tag
   } = req.body;
 
-  Item.create({ title, author, description, media, cover, type })
-    .then(async (item) => {
-      const { item_id } = item;
-
-      for (const category of categories) {
-        await item.createCategory({ item_id, name: category });
-      }
-
-      await item.createTag({ item_id, ...tag });
-
-      return res.status(200).send(
-        { message: 'ITEM_ADDED', result: item.toJSON() }
-      );
-    })
-    .catch((err) => {
-      console.error(err);
-      return res.status(500).send({ message: err });
+  try {
+    const item = Item.create({
+      title, author, description, media, cover, type
     });
+    const { item_id } = item;
+    const users = await User.findAll({ attributes: ['user_id'], raw: true });
+
+    for (const category of categories) {
+      await item.createCategory({ item_id, name: category });
+    }
+
+    for (const { user_id } of users) {
+      await Notification.create({
+        text: `Baru diterbitkan: ${title} karya ${author}`,
+        user_id
+      });
+    }
+
+    await item.createTag({ item_id, ...tag });
+
+    return res.status(200).send(
+      { message: 'ITEM_ADDED', result: item.toJSON() }
+    );
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send({ message: err });
+  }
 });
 
 router.patch('/:item_id', admin, async (req, res) => {

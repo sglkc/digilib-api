@@ -128,7 +128,9 @@ router.get('/notifications', async (req, res) => {
   const user = await User.findByPk(user_id);
 
   try {
-    const rows = await user.getNotifications();
+    const rows = await user.getNotifications({
+      order: [['notification_id', 'DESC']]
+    });
 
     if (!rows.length) {
       return res.status(400).send({ message: 'NOTIFICATIONS_EMPTY' });
