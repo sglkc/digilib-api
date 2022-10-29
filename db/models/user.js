@@ -22,6 +22,10 @@ module.exports = (sequelize, DataTypes) => {
         otherKey: 'item_id',
         foreignKey: 'user_id'
       });
+      this.hasMany(models.Notification, {
+        foreignKey: 'user_id',
+        sourceKey: 'user_id'
+      })
     }
   }
   User.init({

@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const auth = require('#middleware/authentication');
-const { User } = require('#models');
+const { Notification, User } = require('#models');
 
 router.post('/password', async (req, res) => {
   const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD } = process.env;
@@ -111,22 +111,47 @@ router.patch('/password', async (req, res) => {
   const { user_id } = res.locals;
   const user = await User.findByPk(user_id);
 
-  bcrypt.genSalt(10, (err, salt) => {
-    if (err) return res.status(500).send({ message: err });
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
 
-    bcrypt.hash(password, salt, (err, password) => {
-      if (err) return res.status(500).send({ message: err });
+    await user.update({ password: hash })
+    return res.status(200).send({ message: 'PASSWORD_UPDATED' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send({ message: err });
+  }
+});
 
-      user.update({ password })
-        .then(() => {
-          return res.status(200).send({ message: 'PASSWORD_UPDATED' });
-        })
-        .catch((err) => {
-          console.error(err);
-          return res.status(500).send({ message: err });
-        });
-    });
-  });
+router.get('/notifications', async (req, res) => {
+  const { user_id } = res.locals;
+  const user = await User.findByPk(user_id);
+
+  try {
+    const rows = await user.getNotifications();
+
+    if (!rows.length) {
+      return res.status(400).send({ message: 'NOTIFICATIONS_EMPTY' });
+    }
+
+    return res.status(200).send({ result: rows });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send({ message: err });
+  }
+});
+
+router.delete('/notifications', async (req, res) => {
+  const { user_id } = res.locals;
+
+  try {
+    await Notification.destroy({ where: { user_id }});
+
+    return res.status(200).send({ message: 'NOTIFICATIONS_DELETED' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send({ message: err });
+  }
 });
 
 module.exports = {

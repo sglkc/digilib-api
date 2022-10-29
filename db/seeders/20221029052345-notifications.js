@@ -10,19 +10,19 @@ module.exports = {
      *   name: 'John Doe',
      *   isBetaMember: false
      * }], {});
-    */
-    await queryInterface.bulkInsert('histories', [
+     */
+    await queryInterface.bulkInsert('notifications', [
       {
         user_id: 1,
-        item_id: 3
+        text: 'Test notification'
       },
       {
         user_id: 1,
-        item_id: 1
+        text: 'Update Aplikasi telah tersedia'
       },
       {
         user_id: 1,
-        item_id: 2
+        text: 'Update Aplikasi telah tersedia'
       }
     ], {});
   },
@@ -34,6 +34,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    await queryInterface.bulkDelete('histories', null, {});
+    await queryInterface.bulkDelete('notifications', null, {});
   }
 };
