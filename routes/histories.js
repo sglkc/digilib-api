@@ -49,6 +49,12 @@ router.post('/:item_id', async (req, res) => {
 
   try {
     const user = await User.findByPk(user_id);
+    const latest = await user.getHistories({ limit: 1 });
+
+    if (item_id === latest.item_id) {
+      return res.status(200).send({ message: 'KEEP_HISTORY' });
+    }
+
     const result = await user.addHistory(item_id);
 
     return res.status(200).send({ message: 'ADDED_HISTORY', result });
