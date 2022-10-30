@@ -11,9 +11,7 @@ router.get('/', (req, res) => {
 
   Category.findAll({
     where: {
-      name: {
-        [Op.substring]: search
-      }
+      name: { [Op.substring]: (search || '') }
     }
   })
     .then((rows) => {
@@ -60,6 +58,10 @@ router.get('/items', (req, res) => {
         ...row.Item.toJSON(),
         Bookmark: Boolean(row.get('Bookmark'))
       }));
+
+      if (!result.length) {
+        return res.status(400).send({ message: 'PAGE_NOT_FOUND' });
+      }
 
       return res.status(200).send({ result, count: count.length });
     })
