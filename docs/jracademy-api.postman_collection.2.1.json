@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "edf9bb40-1d75-4308-bc94-3f937c8798c7",
 		"name": "jracademy-api",
-		"description": "Dokumentasi ini berisi endpoint yang tersedia di jracademy-api lengkap beserta dengan response-nya.",
+		"description": "Dokumentasi ini berisi endpoint yang tersedia di jracademy-api lengkap beserta dengan response-nya. Berikut beberapa response code yang digunakan dalam API ini.\n\n### Response Codes:\n\n| **Code** | **Arti** |\n| --- | --- |\n| 200 | Sukses. Jika ada data biasanya disimpan di key `result` |\n| 400 | Gagal. Biasanya karena input tidak valid. Cek key `message` jika ada pesan |\n| 401 | Tidak terautentikasi. Request tidak terdapat header Authorization berisi token Bearer |\n| 403 | Forbidden. Route ini hanya bisa diakses oleh Admin |\n| 500 | Server error. Jika terjadi kode ini bisa cek dalam console atau log API |",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "20300240"
 	},
@@ -19,7 +19,7 @@
 								"exec": [
 									"const json = pm.response.json();",
 									"",
-									"pm.variables.set('token', json.token);"
+									"if (json.token) pm.collectionVariables.set('token', json.token);"
 								],
 								"type": "text/javascript"
 							}
@@ -47,7 +47,7 @@
 								"register"
 							]
 						},
-						"description": "Endpoint `POST /auth/register` untuk mendaftarkan user baru. Untuk mengganti user, ubah variable di folder jracademy.\n\n### Response:\n\n``` json\n{\n    \"message\": \"Pesan sukses atau error\",\n    \"token\": \"Jika sukses akan memberikan token JWT\"\n}\n\n```"
+						"description": "Endpoint `POST /auth/register` untuk mendaftarkan user baru. Untuk mengganti user, ubah variable di folder jracademy.\n\n### Response:\n\n``` json\n{\n    \"message\": \"Pesan sukses atau error\",\n    \"token\": \"Jika sukses akan memberikan token JWT\"\n}\n```\n\n### Messages:\n\n`USER_REGISTERED` = user berhasil terdaftar\n\n`EMAIL_DUPLICATE` = email user sudah terdaftar"
 					},
 					"response": []
 				},
@@ -60,7 +60,7 @@
 								"exec": [
 									"const json = pm.response.json();",
 									"",
-									"pm.collectionVariables.set('token', json.token);"
+									"if (json.token) pm.collectionVariables.set('token', json.token);"
 								],
 								"type": "text/javascript"
 							}
@@ -88,7 +88,7 @@
 								"login"
 							]
 						},
-						"description": "Endpoint `POST /auth/login` untuk mendapatkan token JWT user yang sudah terdaftar.\n\n### Response:\n\n``` json\n{\n    \"message\": \"Pesan sukses atau error\",\n    \"token\": \"Jika sukses akan memberikan token JWT\"\n}\n\n```"
+						"description": "Endpoint `POST /auth/login` untuk mendapatkan token JWT user yang sudah terdaftar.\n\n### Response:\n\n``` json\n{\n    \"message\": \"Pesan sukses atau error\",\n    \"token\": \"Jika sukses akan memberikan token JWT\"\n}\n```\n\n### Messages:\n\n`EMAIL_NOT_FOUND` = email belum terdaftar\n\n`INVALID_PASSWORD` = password salah\n\n`USER_AUTHENTICATED` = user berhasil masuk"
 					},
 					"response": []
 				}
@@ -96,24 +96,37 @@
 			"description": "Endpoint `/auth` digunakan untuk keperluan **register** dan **login** user."
 		},
 		{
-			"name": "users",
+			"name": "user",
 			"item": [
 				{
 					"name": "get",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json();",
+									"",
+									"if (json.token) pm.collectionVariables.set('token', json.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/users/",
+							"raw": "{{base_url}}/user/",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"users",
+								"user",
 								""
 							]
 						},
-						"description": "Endpoint `GET /users/` untuk mendapatkan user yang dipakai.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan objek user\"\n}\n\n```"
+						"description": "Endpoint `GET /users/` untuk mendapatkan user yang dipakai.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan objek user\"\n}\n```\n\n### Messages:\n\n`USER_NOT_FOUND` = user tidak dapat ditemukan\n\n`USER_AUTHENTICATED` = user berhasil masuk"
 					},
 					"response": []
 				},
@@ -137,7 +150,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"nama\": \"{{nama}} Edited\",\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\",\n    \"tanggal_lahir\": \"{{currentDate}}\"\n}",
+							"raw": "{\n    \"nama\": \"{{nama}} Edited\",\n    \"email\": \"{{email}}\",\n    \"tanggal_lahir\": \"{{currentDate}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -145,16 +158,16 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/users/",
+							"raw": "{{base_url}}/user/",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"users",
+								"user",
 								""
 							]
 						},
-						"description": "Endpoint `PATCH /users/` untuk memperbarui user yang dipakai.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\",\n  \"result\": \"Jika sukses akan memberikan objek user\"\n}\n\n```"
+						"description": "Endpoint `PATCH /users/` untuk memperbarui user yang dipakai.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\",\n  \"result\": \"Jika sukses akan memberikan objek user\"\n}\n```\n\n### Messages:\n\n`USER_UPDATED` = user berhasil diperbarui"
 					},
 					"response": []
 				},
@@ -165,7 +178,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"password\": \"{{password}}\",\n    \"old_password\": \"{{password}}\"\n}",
+							"raw": "{\n    \"password\": \"{{password}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -173,21 +186,21 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/users/password",
+							"raw": "{{base_url}}/user/password",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"users",
+								"user",
 								"password"
 							]
 						},
-						"description": "Endpoint `PATCH /users/password` untuk memperbarui password user yang dipakai.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\"\n}\n\n```"
+						"description": "Endpoint `PATCH /users/password` untuk memperbarui password user yang dipakai.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\"\n}\n```\n\n### Messages:\n\n`PASSWORD_UPDATED` = password user berhasil diperbarui"
 					},
 					"response": []
 				}
 			],
-			"description": "Endpoint `/users` digunakan untuk mendapatkan informasi user dan memperbarui user. Setiap request wajib mempunyai header Authorization berisi Bearer token JWT untuk user yang ingin dimodifikasi.",
+			"description": "Endpoint `/user` digunakan untuk mendapatkan informasi user dan memperbarui user. Setiap request wajib mempunyai header Authorization berisi Bearer token JWT untuk user yang ingin dimodifikasi.",
 			"auth": {
 				"type": "bearer",
 				"bearer": [
@@ -228,16 +241,37 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/items/",
+							"raw": "{{base_url}}/items?limit=10&page=1&search=Neuro&type=video",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
-								"items",
-								""
+								"items"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Maksimal item per halaman"
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Halaman pagination"
+								},
+								{
+									"key": "search",
+									"value": "Neuro",
+									"description": "Keyword pencarian nama item"
+								},
+								{
+									"key": "type",
+									"value": "video",
+									"description": "Tipe item (audio, book, video) kosong untuk semua"
+								}
 							]
 						},
-						"description": "Endpoint `GET /items/` untuk mendapatkan semua item dalam database.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan array dari objek item\",\n  \"count\": \"Jika sukses akan memberikan jumlah item\"\n}\n\n```"
+						"description": "Endpoint `GET /items/` untuk mendapatkan semua item dalam database.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan array dari objek item\",\n  \"count\": \"Jika sukses akan memberikan jumlah seluruh item di database\"\n}\n```\n\n### Messages:\n\n`INVALID_PAGE` = parameter `page` tidak sesuai dengan kriteria (angka diatas 0)\n\n`PAGE_NOT_FOUND` = halaman tidak dapat ditemukan (item kosong)"
 					},
 					"response": []
 				},
@@ -256,7 +290,7 @@
 								"{{item_id}}"
 							]
 						},
-						"description": "Endpoint `GET /items/:item_id` untuk mendapatkan item menggunakan id.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan objek item\"\n}\n\n```"
+						"description": "Endpoint `GET /items/:item_id` untuk mendapatkan item menggunakan id.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan objek item\"\n}\n```\n\n### Messages:\n\n`ITEM_NOT_FOUND` = item tidak ditemukan"
 					},
 					"response": []
 				},
@@ -297,7 +331,7 @@
 								""
 							]
 						},
-						"description": "Endpoint `POST /items/` untuk menambahkan item.  \n\n### Response\n\n``` json\n{\n   \"message\": \"Pesan sukses atau error\",\n   \"result\": \"Jika sukses memberikan objek item\"\n}\n\n```"
+						"description": "Endpoint `POST /items/` untuk menambahkan item.\n\n### Response\n\n``` json\n{\n   \"message\": \"Pesan sukses atau error\",\n   \"result\": \"Jika sukses memberikan objek item\"\n}\n```\n\n### Messages:\n\n`ITEM_ADDED` = item berhasil ditambah"
 					},
 					"response": []
 				},
@@ -325,7 +359,7 @@
 								"{{item_id}}"
 							]
 						},
-						"description": "Endpoint `PATCH /items/:item_id` untuk memperbarui item.\n\n### Response\n\n``` json\n{\n   \"message\": \"Pesan sukses atau error\",\n   \"result\": \"Jika sukses memberikan objek item\"\n}\n\n```"
+						"description": "Endpoint `PATCH /items/:item_id` untuk memperbarui item.\n\n### Response\n\n``` json\n{\n   \"message\": \"Pesan sukses atau error\",\n   \"result\": \"Jika sukses memberikan objek item\"\n}\n```\n\n### Messages:\n\n`ITEM_UPDATED` = item berhasil diperbarui"
 					},
 					"response": []
 				},
@@ -344,7 +378,7 @@
 								"{{item_id}}"
 							]
 						},
-						"description": "Endpoint `DELETE /items/:item_id` untuk menghapus item menggunakan id.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\"\n}\n\n```"
+						"description": "Endpoint `DELETE /items/:item_id` untuk menghapus item menggunakan id.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\"\n}\n```\n\n### Messages:\n\n`ITEM_NOT_FOUND` = item tidak ditemukan\n\n`ITEM_DELETED` = item berhasil dihapus"
 					},
 					"response": []
 				}
@@ -390,16 +424,28 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/bookmarks/",
+							"raw": "{{base_url}}/bookmarks/?limit=10&page=1",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"bookmarks",
 								""
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Maksimal item per halaman"
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Halaman pagination"
+								}
 							]
 						},
-						"description": "Endpoint `GET /bookmarks/` untuk mendapatkan semua item yang di bookmark oleh user.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan array dari objek item\"\n}\n\n```"
+						"description": "Endpoint `GET /bookmarks/` untuk mendapatkan semua item yang di bookmark oleh user.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan array dari objek item\"\n}\n```\n\n### Messages\n\n`PAGE_EMPTY` = halaman kosong\n\n`INVALID_PAGE` = parameter `page` tidak sesuai dengan kriteria (angka diatas 0)\n\n`PAGE_NOT_FOUND` = halaman tidak dapat ditemukan (item kosong)"
 					},
 					"response": []
 				},
@@ -418,7 +464,7 @@
 								"{{item_id}}"
 							]
 						},
-						"description": "Endpoint `GET /bookmarks/:item_id` untuk mendapatkan apakah user mempunyai bookmark item menggunakan id.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan boolean jika user bookmark\"\n}\n\n```"
+						"description": "Endpoint `GET /bookmarks/:item_id` untuk mendapatkan apakah user mempunyai bookmark item menggunakan id.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan\",\n}\n```\n\n### Messages\n\n`ADDED_BOOKMARK` = item di bookmark user\n\n`REMOVED_BOOKMARK` = item tidak di bookmark user"
 					},
 					"response": []
 				},
@@ -438,15 +484,6 @@
 					"request": {
 						"method": "POST",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
 							"raw": "{{base_url}}/bookmarks/{{item_id}}",
 							"host": [
@@ -457,7 +494,7 @@
 								"{{item_id}}"
 							]
 						},
-						"description": "Endpoint `POST /bookmarks/:item_id` untuk menambahkan item ke bookmark user.\n\n### Response\n\n``` json\n{\n   \"message\": \"Pesan sukses atau error\",\n   \"result\": \"Jika sukses memberikan objek item\"\n}\n\n```"
+						"description": "Endpoint `POST /bookmarks/:item_id` untuk menambahkan item ke bookmark user.\n\n### Response\n\n``` json\n{\n   \"message\": \"Pesan sukses atau error\",\n   \"result\": \"Jika sukses memberikan array objek item\"\n}\n```\n\n### Messages\n\n`ADDED_BOOKMARK` = item berhasil ditambahkan ke bookmark\n\n`ITEM_IS_BOOKMARKED` = item sudah dibookmark\n\n`ITEM_NOT_FOUND` = item tidak ditemukan"
 					},
 					"response": []
 				},
@@ -476,7 +513,7 @@
 								"{{item_id}}"
 							]
 						},
-						"description": "Endpoint `DELETE /bookmarks/:item_id` untuk menghapus item dari bookmark user menggunakan id.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\",\n  \"result\": \"Jika sukses memberikan value true\"\n}\n\n```"
+						"description": "Endpoint `DELETE /bookmarks/:item_id` untuk menghapus item dari bookmark user menggunakan id.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\"\n}\n```\n\n### Messages\n\n`REMOVED_BOOKMARK` = item berhasil dihapus dari bookmark\n\n`ITEM_NOT_BOOKMARKED` = item tidak ada di bookmark user"
 					},
 					"response": []
 				}
@@ -522,16 +559,28 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/histories/",
+							"raw": "{{base_url}}/histories/?limit=10&page=1",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"histories",
 								""
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Maksimal item per halaman"
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Halaman pagination"
+								}
 							]
 						},
-						"description": "Endpoint `GET /histories/` untuk mendapatkan semua item yang telah dibuka oleh user.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan array dari objek item\"\n}\n\n```"
+						"description": "Endpoint `GET /histories/` untuk mendapatkan semua item yang telah dibuka oleh user.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan array dari objek item\"\n}\n```\n\n### Messages\n\n`PAGE_EMPTY` = halaman kosong\n\n`INVALID_PAGE` = parameter `page` tidak sesuai dengan kriteria (angka diatas 0)\n\n`PAGE_NOT_FOUND` = halaman tidak dapat ditemukan (item kosong)"
 					},
 					"response": []
 				},
@@ -570,7 +619,7 @@
 								"{{item_id}}"
 							]
 						},
-						"description": "Endpoint `POST /histories/:item_id` untuk menambahkan item ke history user.\n\n### Response\n\n``` json\n{\n   \"message\": \"Pesan sukses atau error\",\n   \"result\": \"Jika sukses memberikan objek history\"\n}\n\n```"
+						"description": "Endpoint `POST /histories/:item_id` untuk menambahkan item ke history user.\n\n### Response\n\n``` json\n{\n   \"message\": \"Pesan sukses atau error\",\n   \"result\": \"Jika sukses memberikan array berisi objek history\"\n}\n```\n\n### Messages\n\n`ADDED_HISTORY` = berhasil menambahkan item ke history user\n\n`ITEM_NOT_FOUND` = item_id tidak ditemukan"
 					},
 					"response": []
 				}
@@ -626,7 +675,7 @@
 								"placeholder-1.jpg"
 							]
 						},
-						"description": "Endpoint `/files/:foldername/:filename` untuk mendapatkan file pada folder. Folder ada dua yaitu `cover` dan `media`. Sedangkan file harus diupload sebelumnya.\n\n### Response\n\nBerupa file atau json dengan format\n\n``` json\n{\n  \"message\": \"Pesan error\"\n}\n\n```"
+						"description": "Endpoint `/files/:foldername/:filename` untuk mendapatkan file pada folder. Folder ada dua yaitu `cover` dan `media`. Sedangkan file harus diupload sebelumnya.\n\n### Response\n\nBerupa file atau json dengan format\n\n``` json\n{\n  \"message\": \"Pesan error\"\n}\n```"
 					},
 					"response": []
 				},
@@ -640,11 +689,13 @@
 							"formdata": [
 								{
 									"key": "cover",
+									"description": "File untuk thumbnail item",
 									"type": "file",
 									"src": "/home/sglkc/web/jracademy/jracademy-api/static/cover/13563593.jpg"
 								},
 								{
 									"key": "media",
+									"description": "File item",
 									"type": "file",
 									"src": "/home/sglkc/web/jracademy/jracademy-api/static/media/Placeholder.pdf"
 								}
@@ -659,7 +710,7 @@
 								"files"
 							]
 						},
-						"description": "Endpoint `POST /files` untuk mengupload file cover atau media. Auth menggunakan Bearer Token dan user harus seorang admin. **Body yang dipakai multipart/form-data.**\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\"\n}\n\n```"
+						"description": "Endpoint `POST /files` untuk mengupload file cover atau media. Auth menggunakan Bearer Token dan user harus seorang admin. **Body yang dipakai multipart/form-data.**\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\"\n}\n```"
 					},
 					"response": []
 				},
@@ -694,12 +745,247 @@
 								"Placeholder.pdf"
 							]
 						},
-						"description": "Endpoint `DELETE /files/:foldername/:filename` untuk menghapus item yang telah disimpan. Auth menggunakan Bearer Token dan user harus seorang admin. Body kosong.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\"\n}\n\n```"
+						"description": "Endpoint `DELETE /files/:foldername/:filename` untuk menghapus item yang telah disimpan. Auth menggunakan Bearer Token dan user harus seorang admin. Body kosong.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\"\n}\n```"
 					},
 					"response": []
 				}
 			],
 			"description": "Endpoint `/files` digunakan untuk mengunggah file cover dan media untuk item pada database. Auth menggunakan Bearer Token.\n\nRequest selain `GET` user harus menjadi admin.",
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "categories",
+			"item": [
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/categories?search=sains",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"categories"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "sains",
+									"description": "keyword untuk mencari kategori"
+								}
+							]
+						},
+						"description": "Endpoint `GET /categories/` untuk mendapatkan semua kategori dalam database.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan array dari objek kategori\",\n  \"count\": \"Jika sukses akan memberikan jumlah kategori\"\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "getItems",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/categories/items?limit=5&page=1&search[]=Sains dan Pendidikan",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"categories",
+								"items"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "5",
+									"description": "Maksimal item per halaman"
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Halaman pagination"
+								},
+								{
+									"key": "search[]",
+									"value": "Sains dan Pendidikan",
+									"description": "keyword berupa array"
+								},
+								{
+									"key": "search[]",
+									"value": "Neurosains",
+									"description": "keyword berupa array",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Endpoint `GET /categories/items` untuk mendapatkan semua item yang sesuai dengan kategori pada parameter `search`.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan array dari objek item\",\n  \"count\": \"Jika sukses akan memberikan jumlah item\"\n}\n```\n\n### Messages\n\n`PAGE_EMPTY` = halaman kosong\n\n`INVALID_PAGE` = parameter `page` tidak sesuai dengan kriteria (angka diatas 0)\n\n`PAGE_NOT_FOUND` = halaman tidak dapat ditemukan (item kosong)"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoint `/categories` digunakan untuk mendapatkan kategori item pada database. Auth menggunakan Bearer Token."
+		},
+		{
+			"name": "quotes",
+			"item": [
+				{
+					"name": "get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/quotes/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"quotes",
+								""
+							]
+						},
+						"description": "Endpoint `GET /quotes/` untuk mendapatkan semua quote dalam database.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan array dari objek quote\",\n  \"count\": \"Jika sukses akan memberikan jumlah seluruh quote di database\"\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "random",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/quotes/random",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"quotes",
+								"random"
+							]
+						},
+						"description": "Endpoint `GET /quotes/random` untuk mendapatkan quote secara acak.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan objek quote\"\n}\n\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json();",
+									"",
+									"pm.collectionVariables.set('quote_id', json.result.quote_id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"text\": \"{{$randomLoremSentence}} {{$randomLoremSentence}}\",\n    \"author\": \"{{$randomFullName}} - {{$randomLoremWord}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/quotes/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"quotes",
+								""
+							]
+						},
+						"description": "Endpoint `POST /quotes/` untuk menambahkan quote.\n\n### Response\n\n``` json\n{\n   \"message\": \"Pesan sukses atau error\",\n   \"result\": \"Jika sukses memberikan objek quote\"\n}\n\n```\n\n### Messages:\n\n`QUOTE_ADDED` = quote berhasil ditambah"
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"text\": \"{{$randomLoremSentence}} {{$randomLoremSentence}}\",\n    \"author\": \"{{$randomFullName}} - {{$randomLoremWord}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/quotes/{{quote_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"quotes",
+								"{{quote_id}}"
+							]
+						},
+						"description": "Endpoint `PATCH /quotes/:quote_id` untuk memperbarui quote.\n\n### Response\n\n``` json\n{\n   \"message\": \"Pesan sukses atau error\"\n}\n\n```\n\n### Messages:\n\n`QUOTE_UPDATED` = quote berhasil diperbarui"
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/quotes/{{quote_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"quotes",
+								"{{quote_id}}"
+							]
+						},
+						"description": "Endpoint `DELETE /quotes/:quote_id` untuk menghapus quote menggunakan id.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\"\n}\n\n```\n\n### Messages:\n\n`QUOTE_DELETED` = quote berhasil dihapus"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoint `/quotes` digunakan untuk mendapatkan quote dan memperbarui quote. Setiap request wajib mempunyai header Authorization berisi Bearer token JWT.\n\nRequest selain `GET` user harus menjadi admin.",
 			"auth": {
 				"type": "bearer",
 				"bearer": [
@@ -755,7 +1041,7 @@
 	"variable": [
 		{
 			"key": "base_url",
-			"value": "http://localhost:5000",
+			"value": "https://digilib.jalanrahmat.id/api",
 			"type": "string"
 		},
 		{
@@ -785,6 +1071,11 @@
 		},
 		{
 			"key": "item_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "quote_id",
 			"value": "1",
 			"type": "string"
 		}

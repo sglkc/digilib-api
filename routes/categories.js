@@ -60,14 +60,14 @@ router.get('/items', (req, res) => {
       }));
 
       if (!result.length) {
-        return res.status(400).send({ message: 'PAGE_NOT_FOUND' });
+        return res.status(400).send({ message: 'PAGE_EMPTY' });
       }
 
       return res.status(200).send({ result, count: count.length });
     })
     .catch((err) => {
       console.error(err);
-      return res.status(500).send({ message: err });
+      return res.status(400).send({ message: 'PAGE_NOT_FOUND' });
     });
 });
 
