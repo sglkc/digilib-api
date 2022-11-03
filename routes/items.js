@@ -3,7 +3,7 @@ const router = require('express').Router();
 const admin = require('#middleware/admin');
 const auth = require('#middleware/authentication');
 const includeBookmark = require('#middleware/bookmark');
-const { Category, Item, Tag } = require('#models');
+const { Category, Notification, Item, Tag, User } = require('#models');
 
 router.use(auth);
 
@@ -76,7 +76,7 @@ router.post('/', admin, async (req, res) => {
   } = req.body;
 
   try {
-    const item = Item.create({
+    const item = await Item.create({
       title, author, description, media, cover, type
     });
     const { item_id } = item;
