@@ -41,7 +41,12 @@ router.post('/register', (req, res) => {
 router.post('/login', (req, res) => {
   const { email, password } = req.body;
 
-  User.unscoped().findOne({ where: { email }})
+  User
+    .unscoped()
+    .findOne({
+      attributes: { include: 'is_admin' },
+      where: { email }
+    })
     .then((user) => {
       if (!user) return res.status(400).send({ message: 'EMAIL_NOT_FOUND' });
 
@@ -59,11 +64,16 @@ router.post('/login', (req, res) => {
           { expiresIn: process.env.JWT_EXPIRES_IN }
         );
 
-        return res.status(200).send({
-          message: 'USER_AUTHENTICATED',
-          result: user.toJSON(),
-          token
-        });
+        return res
+          .status(200)
+          .cookie('TOKEN', token, {
+            expires: new Date(Date.now() + Number(process.env.JWT_EXPIRES_IN))
+          })
+          .send({
+            message: 'USER_AUTHENTICATED',
+            result: user,
+            token
+          });
       });
     })
     .catch((err) => {

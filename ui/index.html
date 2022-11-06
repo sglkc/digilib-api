@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Digilib Admin</title>
+    <link rel="icon" href="assets/favicon.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.15.11/dist/css/uikit.min.css">
+    <script src="assets/script.js" defer></script>
+  </head>
+  <body>
+    <nav class="uk-position-fixed uk-padding-medium">
+      <ul class="uk-nav uk-nav-default uk-padding-small" uk-scrollspy-nav="closest: li; scroll: true">
+        <li><a href="#profile">Profile</a></li>
+        <li><a href="#items">Items</a></li>
+        <li><a href="#item-title">Add Item</a></li>
+      </ul>
+    </nav>
+    <div class="uk-container uk-flex uk-flex-column uk-padding uk-width-2xlarge">
+      <div id="profile" class="uk-margin-bottom uk-text-center">
+        <h2 class="uk-text-bold">Digilib API Admin</h2>
+        <h3 class="uk-margin">Profile</h3>
+        <p>Gunakan input dibawah untuk memperbarui user admin.</p>
+        <form id="user-form" class="uk-flex uk-flex-column uk-width-medium uk-margin-auto" autocomplete="off">
+          <div class="uk-inline">
+            <span class="uk-form-icon" uk-icon="icon: user"></span>
+            <input class="uk-input" type="text" name="nama" placeholder="Nama Lengkap" required autofocus>
+          </div>
+          <div class="uk-inline">
+            <span class="uk-form-icon" uk-icon="icon: mail"></span>
+            <input class="uk-input" type="email" name="email" placeholder="Email" required>
+          </div>
+          <div class="uk-inline">
+            <span class="uk-form-icon" uk-icon="icon: calendar"></span>
+            <input class="uk-input" type="date" name="tanggal_lahir" placeholder="Tanggal Lahir" required>
+          </div>
+          <div class="uk-inline">
+            <span class="uk-form-icon" uk-icon="icon: lock"></span>
+            <input class="uk-input" type="password" name="password" placeholder="Password">
+          </div>
+          <button class="uk-button uk-button-primary" type="submit">
+            <span uk-icon="icon: pencil"></span> Update
+          </button>
+        </form>
+      </div>
+      <hr>
+      <div id="items" class="uk-margin-bottom uk-text-center">
+        <h3>Items</h3>
+        <form id="item-search" class="uk-flex">
+          <input class="uk-input" name="search" placeholder="Search">
+          <select class="uk-select" name="type">
+            <option value="all">All</option>
+            <option value="audio">Audio</option>
+            <option value="book">Book</option>
+            <option value="video">Video</option>
+          </select>
+          <button class="uk-button uk-button-primary" type="submit">Search</button>
+        </form>
+        <div class="uk-overflow-auto">
+          <table class="uk-table uk-table-divider">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Description</th>
+                <th>Cover</th>
+                <th>Media</th>
+                <th>Type</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="item-table">
+              <tr id="item-row" hidden>
+                <td title></td>
+                <td author></td>
+                <td description></td>
+                <td><img width="100" cover></td>
+                <td media></td>
+                <td type></td>
+                <td>
+                  <button class="uk-button uk-button-default uk-button-small">
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ul id="item-pagination" class="uk-pagination uk-flex-center uk-margin-remove">
+          <li keep><a prev><span uk-pagination-previous></span></a></li>
+          <li class="uk-active"><a>1</a></li>
+          <li keep><a next><span uk-pagination-next></span></a></li>
+        </ul>
+        <h4 id="item-title" class="uk-margin">Add Item</h4>
+        <form id="item-form" autocomplete="off">
+          <input class="uk-input" name="item_id" hidden>
+          <input class="uk-input" name="title" placeholder="Title" maxlength="40" required>
+          <input class="uk-input" name="author" placeholder="Author" maxlength="40" required>
+          <textarea class="uk-textarea" name="description" placeholder="Description" rows="3" required></textarea>
+          <p class="uk-margin-remove uk-text-left">Click to upload</p>
+          <div id="item-file-form" class="uk-flex">
+            <div uk-form-custom="target: true" style="flex-grow: 1">
+              <input type="file" name="file-cover">
+              <input class="uk-input" name="cover" placeholder="Cover Image" disabled>
+            </div>
+            <div uk-form-custom="target: true" style="flex-grow: 1">
+              <input type="file" name="file-media">
+              <input class="uk-input" name="media" placeholder="Media File" disabled>
+            </div>
+            <button class="uk-button uk-button-primary" type="button">Upload</button>
+          </div>
+          <div class="uk-margin-small uk-grid-small uk-grid">
+            <p class="uk-text-emphasis">Tipe Item</p>
+            <label><input class="uk-radio" type="radio" name="type" value="audio" checked> Audio</label>
+            <label><input class="uk-radio" type="radio" name="type" value="book"> Book</label>
+            <label><input class="uk-radio" type="radio" name="type" value="video"> Video</label>
+          </div>
+          <p class="uk-margin-remove uk-text-left">Pisah dengan koma (,) contoh: Edukasi,Sains dan Pendidikan</p>
+          <input class="uk-input" name="categories" placeholder="Categories" required>
+          <div class="uk-margin" tag>
+            <p class="uk-margin-small">Tag Item</p>
+            <input class="uk-input" name="tokoh" placeholder="Tokoh" required>
+            <input class="uk-input" name="tempat" placeholder="Tempat" required>
+            <input class="uk-input" name="peristiwa" placeholder="Peristiwa" required>
+            <input class="uk-input" type="date" name="waktu" placeholder="Waktu" required>
+          </div>
+          <button class="uk-button uk-button-secondary" type="button" back hidden>Back</button>
+          <button class="uk-button uk-button-primary" type="submit">Add</button>
+          <button class="uk-button uk-button-danger" type="button" delete hidden>Delete</button>
+        </form>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.15.11/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.15.11/dist/js/uikit-icons.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>if (!location.pathname.endsWith('ui/')) location.href = location.href + '/'</script>
+  </body>
+</html>

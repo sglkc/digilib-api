@@ -6,11 +6,13 @@ const { User } = require('#models');
 routes.use((req, res, next) => {
   const { authorization } = req.headers;
 
-  if (!authorization && !req.query.token) {
+  if (!authorization && !req.query.token && !req.cookies.TOKEN) {
     return res.status(401).send({ message: 'NO_TOKEN' });
   }
 
-  const token = req.query.token || authorization.replace('Bearer ', '');
+  const token = req.cookies.TOKEN
+    || req.query.token
+    || authorization.replace('Bearer ', '');
 
   if (!token) return res.status(401).send({ message: 'INVALID_TOKEN' });
 

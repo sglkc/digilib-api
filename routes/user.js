@@ -68,7 +68,10 @@ router.use(auth);
 router.get('/', (req, res) => {
   const { user_id } = res.locals;
 
-  User.findByPk(user_id, { rejectOnEmpty: true })
+  User.findByPk(user_id, {
+    attributes: { include: 'is_admin' },
+    rejectOnEmpty: true
+  })
     .then((user) => {
       const token = jwt.sign(
         { user_id: user.user_id },
@@ -78,7 +81,7 @@ router.get('/', (req, res) => {
 
       return res.status(200).send({
         message: 'USER_AUTHENTICATED',
-        result: user.toJSON(),
+        result: user,
         token
       });
     })
