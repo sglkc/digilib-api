@@ -14,7 +14,7 @@ Axios.interceptors.response.use(
     err.data = err.response?.data;
     err.status = err.response?.status;
 
-    console.log(err.response);
+    console.error(err.response);
 
     if (err.status >= 500)
       alert(`Terjadi error [${err.status}]: ${err.message}`);
@@ -66,17 +66,31 @@ const ITEM = {
   filesUploaded: false
 }
 
+function changeFileMedia() {
+  const type = $('#item-file-form [name=file-media]').get(0).files.item(0).type;
+
+  $('#item-form [type=radio]').removeAttr('checked');
+
+  if (type === 'application/pdf')
+    $('#item-form [type=radio][value=book]').attr('checked', true);
+  else if (type.startsWith('audio'))
+    $('#item-form [type=radio][value=audio]').attr('checked', true);
+  else if (type.startsWith('video'))
+    $('#item-form [type=radio][value=video]').attr('checked', true);
+}
+
 function uploadItemFiles() {
   const data = new FormData();
+  const date = new Date().toISOString().slice(0, 19).match(/\d/g).join(''); // yyyymmddhhmmss
   const files = {
     cover: $('#item-file-form [name=file-cover]').get(0).files.item(0),
     media: $('#item-file-form [name=file-media]').get(0).files.item(0)
   };
 
   if (files.cover)
-    data.append('cover', files.cover, Date.now() + '-' + files.cover.name);
+    data.append('cover', files.cover, date + '-' + files.cover.name);
   if (files.media)
-    data.append('media', files.media, Date.now() + '-' + files.media.name);
+    data.append('media', files.media, date + '-' + files.media.name);
   if (!data.entries().next().value) return;
 
   Axios.post('/files', data)
@@ -92,14 +106,16 @@ function uploadItemFiles() {
 function submitItemForm(e) {
   e.preventDefault();
 
+  const categories = $('#item-form [name=categories]').val().split(',')
   const data = {
+    item_id: $('#item-form [name=item_id]').val(),
     title: $('#item-form [name=title]').val(),
     author: $('#item-form [name=author]').val(),
     description: $('#item-form [name=description]').val(),
     cover: $('#item-form [name=cover]').val(),
     media: $('#item-form [name=media]').val(),
     type: $('#item-form [name=type]:checked').val(),
-    categories: $('#item-form [name=categories]').val().split(','),
+    categories: [ ...new Set(categories) ],
     tag: {
       tokoh: $('#item-form [tag] [name=tokoh]').val(),
       tempat: $('#item-form [tag] [name=tempat]').val(),
@@ -119,16 +135,16 @@ function submitItemForm(e) {
         alert('Sukses menambahkan item');
         fetchItems();
         toggleItemForm();
-        ITEMS.filesUploaded = false;
+        ITEM.filesUploaded = false;
       })
       .catch(() => false);
   } else {
-    Axios.patch('/items/' + id)
+    Axios.patch('/items/' + data.item_id, data)
       .then(() => {
         alert('Sukses mengedit item');
         fetchItems();
         toggleItemForm();
-        ITEMS.filesUploaded = false;
+        ITEM.filesUploaded = false;
       })
       .catch(() => false);
   }
@@ -139,7 +155,6 @@ function toggleItemForm() {
   $('#item-form > [type=submit]').text('Add');
   $('#item-form > [type=button]').attr('hidden', true);
   $('#item-form [type=radio]').removeAttr('checked');
-  $('#item-form [type=radio]').eq(0).attr('checked', true);
   $('#item-form').get(0).reset();
 }
 
@@ -219,10 +234,7 @@ async function editItem(id) {
   });
 
   $('#item-form [type=radio]').removeAttr('checked');
-  $('#item-form [type=radio]').each((_, elm) => {
-    const value = $(elm).val();
-    if (value === result.type) $(elm).prop('checked', true);
-  });
+  $(`#item-form [type=radio][value=${result.type}]`).attr('checked', true);
 
   $('#item-form > [name=categories]').val(result.Categories.map(c => c.name));
 
@@ -233,17 +245,18 @@ async function editItem(id) {
   });
 
   $('#item-form > [tag] > [name=waktu]').val(result.Tag.waktu.slice(0, 10));
-  ITEMS.filesUploaded = true;
+  ITEM.filesUploaded = true;
 }
 
 async function deleteItem(id) {
   Axios.delete('/items/' + id)
-    .then(() => {
+    .then(() => false)
+    .catch(() => false)
+    .finally(() => {
       alert('Item dihapus');
       fetchItems();
       toggleItemForm();
-    })
-    .catch(() => false);
+    });
 }
 
 $('#item-pagination [prev]').click(() => {
@@ -259,7 +272,8 @@ $('#item-pagination [next]').click(() => {
 });
 
 $('#item-search').on('submit', searchItem);
-$('#item-form [back]').click(toggleItemForm);
 $('#item-form').on('submit', submitItemForm);
+$('#item-form [name=file-media]').change(changeFileMedia);
+$('#item-form [back]').click(toggleItemForm);
 $('#item-file-form > button').click(uploadItemFiles);
 fetchItems();

@@ -97,21 +97,21 @@
           <input class="uk-input" name="title" placeholder="Title" maxlength="40" required>
           <input class="uk-input" name="author" placeholder="Author" maxlength="40" required>
           <textarea class="uk-textarea" name="description" placeholder="Description" rows="3" required></textarea>
-          <p class="uk-margin-remove uk-text-left">Click to upload</p>
+          <p class="uk-margin-remove uk-text-left">Klik upload jika ingin menambahkan/mengubah file</p>
           <div id="item-file-form" class="uk-flex">
             <div uk-form-custom="target: true" style="flex-grow: 1">
-              <input type="file" name="file-cover">
+              <input type="file" name="file-cover" accept="image/*">
               <input class="uk-input" name="cover" placeholder="Cover Image" disabled>
             </div>
             <div uk-form-custom="target: true" style="flex-grow: 1">
-              <input type="file" name="file-media">
+              <input type="file" name="file-media" accept="video/*,audio/*,.pdf">
               <input class="uk-input" name="media" placeholder="Media File" disabled>
             </div>
             <button class="uk-button uk-button-primary" type="button">Upload</button>
           </div>
           <div class="uk-margin-small uk-grid-small uk-grid">
             <p class="uk-text-emphasis">Tipe Item</p>
-            <label><input class="uk-radio" type="radio" name="type" value="audio" checked> Audio</label>
+            <label><input class="uk-radio" type="radio" name="type" value="audio" required> Audio</label>
             <label><input class="uk-radio" type="radio" name="type" value="book"> Book</label>
             <label><input class="uk-radio" type="radio" name="type" value="video"> Video</label>
           </div>

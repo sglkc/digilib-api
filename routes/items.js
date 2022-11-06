@@ -1,4 +1,6 @@
-const { Op } = require('sequelize')
+const { unlinkSync } = require('fs');
+const { join } = require('path');
+const { Op } = require('sequelize');
 const router = require('express').Router();
 const admin = require('#middleware/admin');
 const auth = require('#middleware/authentication');
@@ -113,6 +115,15 @@ router.patch('/:item_id', admin, async (req, res) => {
   try {
     const item = await Item.findByPk(item_id);
 
+    try {
+      if (item.cover !== cover)
+        await unlinkSync(join(__dirname, '../static/cover/', item.cover));
+      if (item.media !== media)
+        await unlinkSync(join(__dirname, '../static/media/', item.media));
+    } catch (err) {
+      false;
+    }
+
     await item.update({ title, author, description, media, cover, type });
     await Tag.update({ item_id, ...tag }, { where: { item_id }});
     await Category.destroy({ where: { item_id }});
@@ -137,9 +148,18 @@ router.delete('/:item_id', admin, async (req, res) => {
   if (!count) return res.status(400).send({ message: 'ITEM_NOT_FOUND' });
 
   try {
+    const item = await Item.findByPk(item_id);
+
     await Category.destroy({ where: { item_id }});
     await Tag.destroy({ where: { item_id }});
     await Item.destroy({ where: { item_id }});
+
+    try {
+      await unlinkSync(join(__dirname, '../static/cover/', item.cover));
+      await unlinkSync(join(__dirname, '../static/media/', item.media));
+    } catch {
+      false;
+    }
 
     return res.status(200).send({ message: 'ITEM_DELETED' });
   } catch (err) {
