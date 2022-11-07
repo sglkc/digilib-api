@@ -14,6 +14,8 @@
         <li><a href="#profile">Profile</a></li>
         <li><a href="#items">Items</a></li>
         <li><a href="#item-title">Add Item</a></li>
+        <li><a href="#quotes">Quotes</a></li>
+        <li><a href="#quote-title">Add Quote</a></li>
       </ul>
     </nav>
     <div class="uk-container uk-flex uk-flex-column uk-padding uk-width-2xlarge">
@@ -78,9 +80,7 @@
                 <td media></td>
                 <td type></td>
                 <td>
-                  <button class="uk-button uk-button-default uk-button-small">
-                    Edit
-                  </button>
+                  <button class="uk-button uk-button-default uk-button-small">Edit</button>
                 </td>
               </tr>
             </tbody>
@@ -127,6 +127,46 @@
           <button class="uk-button uk-button-secondary" type="button" back hidden>Back</button>
           <button class="uk-button uk-button-primary" type="submit">Add</button>
           <button class="uk-button uk-button-danger" type="button" delete hidden>Delete</button>
+        </form>
+      </div>
+      <hr>
+      <div id="quotes" class="uk-margin-bottom uk-text-center">
+        <h3>Quotes</h3>
+        <div class="uk-overflow-auto">
+          <table class="uk-table uk-table-divider">
+            <thead>
+              <tr>
+                <th>Text</th>
+                <th>Author</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="quote-table">
+              <tr id="quote-row" hidden>
+                <td text></td>
+                <td author></td>
+                <td>
+                  <button class="uk-button uk-button-default uk-button-small">Edit</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ul id="quote-pagination" class="uk-pagination uk-flex-center uk-margin-remove">
+          <li keep><a prev><span uk-pagination-previous></span></a></li>
+          <li class="uk-active"><a>1</a></li>
+          <li keep><a next><span uk-pagination-next></span></a></li>
+        </ul>
+        <h4 id="quote-title" class="uk-margin">Add Quote</h4>
+        <form id="quote-form" autocomplete="off">
+          <input class="uk-input" name="quote_id" hidden>
+          <textarea class="uk-textarea" name="text" placeholder="Text" rows="3" maxlength="254" required></textarea>
+          <input class="uk-input" name="author" placeholder="Author" maxlength="40" required>
+          <div class="uk-margin">
+            <button class="uk-button uk-button-secondary" type="button" back hidden>Back</button>
+            <button class="uk-button uk-button-primary" type="submit">Add</button>
+            <button class="uk-button uk-button-danger" type="button" delete hidden>Delete</button>
+          </div>
         </form>
       </div>
     </div>

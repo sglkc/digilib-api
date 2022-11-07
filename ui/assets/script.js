@@ -174,12 +174,12 @@ function searchItem(e) {
 async function fetchItems(
   params = new URLSearchParams({ limit: ITEM.limit, page: ITEM.page })
 ) {
-  let res, count, result;
+  let count, result;
 
   $('#item-table').children().remove();
 
   try {
-    res = await Axios('/items?' + params.toString());
+    const res = await Axios('/items?' + params.toString());
     count = res.data.count;
     result = res.data.result;
   } catch (err) {
@@ -204,8 +204,9 @@ async function fetchItems(
   ITEM.pages = Math.round(count / ITEM.limit);
 
   for (let i = 1; i < ITEM.pages; i++) {
-    $('#item-pagination > :last-child')
-      .before(`<li ${i === ITEM.page ? 'class="uk-active"' : ''}><a>${i}</a></li>`);
+    $('#item-pagination > :last-child').before(
+      `<li ${i === ITEM.page ? 'class="uk-active"' : ''}><a>${i}</a></li>`
+    );
     $('#item-pagination > li:nth-last-child(2)').click(() => {
       ITEM.page = i;
       fetchItems();
@@ -219,13 +220,14 @@ async function editItem(id) {
   $('#item-title').text('Edit Item (ID ' + id + ')');
   $('#item-form > [type=submit]').text('Edit');
   $('#item-form > [type=button]').attr('hidden', false);
+  $('#item-form [delete]').off('click');
   $('#item-form [delete]').click(() => deleteItem(id));
 
   try {
     res = await Axios('/items/' + id);
     result = res.data.result;
   } catch (err) {
-    return false;
+    false;
   }
 
   $('#item-form [name]:not([tag]):not([type=radio])').each((_, elm) => {
@@ -277,3 +279,161 @@ $('#item-form [name=file-media]').change(changeFileMedia);
 $('#item-form [back]').click(toggleItemForm);
 $('#item-file-form > button').click(uploadItemFiles);
 fetchItems();
+
+// QUOTES
+
+const QUOTE = {
+  row: $('#quote-row').clone().removeAttr('id').removeAttr('hidden'),
+  page: 1,
+  pages: 1,
+  limit: 5,
+  quotes: []
+}
+
+async function fetchQuotes() {
+  let result, count;
+  QUOTE.page = 1;
+
+  $('#quote-table').children().remove();
+
+  try {
+    const res = await Axios('/quotes');
+    if (!res.data.result.length) throw Error();
+    QUOTE.quotes = res.data.result;
+  } catch (err) {
+    return $('#quote-table').append('<b>Quote kosong</b>');
+  }
+
+  for (let i = 1; i < QUOTE.limit + 1; i++) {
+    const quote = QUOTE.quotes[i - 1];
+
+    if (!quote) continue;
+
+    const row = QUOTE.row.clone();
+
+    $('[text]', row).text(quote.text);
+    $('[author]', row).text(quote.author);
+    $('button', row).click(() => editQuote(quote.quote_id));
+    $('#quote-table').append(row);
+  }
+
+  $('#quote-pagination li:not([keep])').remove();
+
+  QUOTE.pages = Math.ceil(QUOTE.quotes.length / QUOTE.limit) + 1;
+
+  for (let i = 1; i < QUOTE.pages; i++) {
+    $('#quote-pagination > :last-child').before(
+      `<li ${i === QUOTE.page ? 'class="uk-active"' : ''}><a>${i}</a></li>`
+    );
+    $('#quote-pagination > li:nth-last-child(2)').click(() => {
+      QUOTE.page = i;
+      scrollQuotes();
+    });
+  }
+}
+
+async function scrollQuotes() {
+  let i = QUOTE.limit * QUOTE.page - QUOTE.limit;
+
+  $('#quote-table').children().remove();
+
+  for (i; i < (QUOTE.limit * QUOTE.page); i++) {
+    const quote = QUOTE.quotes[i];
+
+    if (!quote) continue;
+
+    const row = QUOTE.row.clone();
+
+    $('[text]', row).text(quote.text);
+    $('[author]', row).text(quote.author);
+    $('button', row).click(() => editQuote(quote.quote_id));
+    $('#quote-table').append(row);
+  }
+
+  $('#quote-pagination').children().removeClass('uk-active');
+  $(`#quote-pagination li:contains("${QUOTE.page}")`).addClass('uk-active');
+}
+
+async function editQuote(id) {
+  let res, result;
+
+  $('#quote-title').text('Edit Quote (ID ' + id + ')');
+  $('#quote-form [type=submit]').text('Edit');
+  $('#quote-form [type=button]').attr('hidden', false);
+  $('#quote-form [delete]').off('click');
+  $('#quote-form [delete]').click(() => deleteQuote(id));
+
+  try {
+    res = await Axios('/quotes/' + id);
+    result = res.data.result;
+  } catch (err) {
+    false;
+  }
+
+  $('#quote-form [name=quote_id]').val(result.quote_id);
+  $('#quote-form [name=text]').val(result.text);
+  $('#quote-form [name=author]').val(result.author);
+}
+
+async function deleteQuote(id) {
+  Axios.delete('/quotes/' + id)
+    .then(() => false)
+    .catch(() => false)
+    .finally(() => {
+      alert('Quote dihapus');
+      toggleQuoteForm();
+      fetchQuotes();
+    });
+}
+
+function submitQuoteForm(e) {
+  e.preventDefault();
+
+  const data = {
+    quote_id: $('#quote-form [name=quote_id]').val(),
+    text: $('#quote-form [name=text]').val(),
+    author: $('#quote-form [name=author]').val()
+  };
+
+  if ($('#quote-form [type=submit]').text() === 'Add') {
+    Axios.post('/quotes', data)
+      .then(() => {
+        alert('Sukses menambahkan quote');
+        fetchQuotes();
+        toggleQuoteForm();
+      })
+      .catch(() => false);
+  } else {
+    Axios.patch('/quotes/' + data.quote_id, data)
+      .then(() => {
+        alert('Sukses mengedit quote');
+        fetchQuotes();
+        toggleQuoteForm();
+      })
+      .catch(() => false);
+  }
+}
+
+function toggleQuoteForm() {
+  $('#quote-title').text('Add Quote');
+  $('#quote-form [type=submit]').text('Add');
+  $('#quote-form [type=button]').attr('hidden', true);
+  $('#quote-form textarea').val('');
+  $('#quote-form input').val('');
+}
+
+$('#quote-pagination [prev]').click(() => {
+  if (QUOTE.page - 1 < 1) return;
+  QUOTE.page--;
+  scrollQuotes();
+});
+
+$('#quote-pagination [next]').click(() => {
+  if (QUOTE.page + 1 >= QUOTE.pages) return;
+  QUOTE.page++;
+  scrollQuotes();
+});
+
+$('#quote-form').on('submit', submitQuoteForm);
+$('#quote-form [back]').click(toggleQuoteForm);
+fetchQuotes();
