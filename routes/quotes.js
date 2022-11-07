@@ -15,6 +15,15 @@ router.get('/', (req, res) => {
     });
 });
 
+router.get('/random', (req, res) => {
+  Quote.findOne({ order: fn('RAND') })
+    .then((result) => res.status(200).send({ result }))
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).send({ result: err });
+    });
+});
+
 router.get('/:quote_id', (req, res) => {
   const { quote_id } = req.params;
 
@@ -23,15 +32,6 @@ router.get('/:quote_id', (req, res) => {
     .catch((err) => {
       console.error(err);
       return res.status(500).send({ message: err });
-    });
-});
-
-router.get('/random', (req, res) => {
-  Quote.findOne({ order: fn('RAND') })
-    .then((result) => res.status(200).send({ result }))
-    .catch((err) => {
-      console.error(err);
-      return res.status(500).send({ result: err });
     });
 });
 
