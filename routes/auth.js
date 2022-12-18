@@ -21,11 +21,16 @@ router.post('/register', (req, res) => {
             { expiresIn: process.env.JWT_EXPIRES_IN }
           );
 
-          return res.status(200).send({
-            message: 'USER_REGISTERED',
-            result: user.toJSON(),
-            token
-          });
+          return res
+            .status(200)
+            .cookie('TOKEN', token, {
+              expires: new Date(Date.now() + Number(process.env.JWT_EXPIRES_IN))
+            })
+            .send({
+              message: 'USER_REGISTERED',
+              result: user.toJSON(),
+              token
+            });
         })
         .catch((err) => {
           const isDuplicate = err.name === 'SequelizeUniqueConstraintError';

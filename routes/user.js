@@ -12,7 +12,7 @@ router.post('/password', async (req, res) => {
   let user;
 
   try {
-    user = await User.findOne({ where: { email }});
+    user = await User.findOne({ where: { email }, rejectOnEmpty: true});
   } catch (err) {
     console.error(err);
     return res.status(400).send({ message: 'EMAIL_NOT_FOUND' });
