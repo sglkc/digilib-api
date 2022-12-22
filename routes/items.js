@@ -109,17 +109,20 @@ router.post('/', admin, async (req, res) => {
 router.patch('/:item_id', admin, async (req, res) => {
   const { item_id } = req.params;
   const {
-    title, author, description, media, cover, type, categories, tag
+    title, author, description, media, cover, type, categories, Categories, tag
   } = req.body;
 
   try {
     const item = await Item.findByPk(item_id);
 
     try {
-      if (item.cover !== cover)
-        await unlinkSync(join(__dirname, '../static/cover/', item.cover));
-      if (item.media !== media)
-        await unlinkSync(join(__dirname, '../static/media/', item.media));
+      const sameCover = await Item.count({ where: { cover } });
+      const sameMedia = await Item.count({ where: { media } });
+
+      if (!sameCover && (item.cover !== cover))
+        unlinkSync(join(__dirname, '../static/cover/', item.cover));
+      if (!sameMedia && item.media !== media)
+        unlinkSync(join(__dirname, '../static/media/', item.media));
     } catch (err) {
       false;
     }
@@ -128,8 +131,8 @@ router.patch('/:item_id', admin, async (req, res) => {
     await Tag.update({ item_id, ...tag }, { where: { item_id }});
     await Category.destroy({ where: { item_id }});
 
-    for (const category of categories) {
-      await item.createCategory({ item_id, name: category });
+    for (const category of categories || Categories) {
+      await item.createCategory({ item_id, name: category.name ?? category });
     }
 
     return res.status(200).send(
@@ -155,8 +158,13 @@ router.delete('/:item_id', admin, async (req, res) => {
     await Item.destroy({ where: { item_id }});
 
     try {
-      await unlinkSync(join(__dirname, '../static/cover/', item.cover));
-      await unlinkSync(join(__dirname, '../static/media/', item.media));
+      const sameCover = await Item.count({ where: { cover: item.cover } });
+      const sameMedia = await Item.count({ where: { media: item.media } });
+
+      if (!sameCover)
+        unlinkSync(join(__dirname, '../static/cover/', item.cover));
+      if (!sameMedia)
+        unlinkSync(join(__dirname, '../static/media/', item.media));
     } catch {
       false;
     }
