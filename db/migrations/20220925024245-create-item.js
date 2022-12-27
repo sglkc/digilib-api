@@ -30,7 +30,7 @@ module.exports = {
       },
       type: {
         allowNull: false,
-        type: Sequelize.ENUM('audio', 'book', 'video'),
+        type: Sequelize.ENUM('article', 'audio', 'book', 'video'),
       },
       createdAt: {
         allowNull: false,

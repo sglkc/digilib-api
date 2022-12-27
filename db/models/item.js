@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     media: DataTypes.TEXT,
     type: {
       type: DataTypes.ENUM,
-      values: ['audio', 'book', 'video']
+      values: ['article', 'audio', 'book', 'video']
     }
   }, {
     defaultScope: {
