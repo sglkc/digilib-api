@@ -13,10 +13,15 @@ module.exports = {
     */
     await queryInterface.bulkInsert('quotes', [
       {
-        text: 'Banyak jalan untuk mendekati Tuhan, sebanyak bilangan nafas' +
-        ' para pencari Tuhan. Tapi jalan yang paling dekat pada Allah adalah' +
-        ' membahagiakan orang lain di sekitarmu. Engkau berkhidmat kepada mereka.',
-        author: 'Jalaluddin Rakhmat - The Road to Allah (hal.268)'
+        text: 'Bahwa hidup harus menerima, penerimaan yang indah. Bahwa hidup' +
+        ' harus dimengerti, pengertian yang benar. Bahwa hidup harus memahamim' +
+          ' pemahaman yang tulus.',
+        author: 'Tere Liye'
+      },
+      {
+        text: 'Daun yang jatuh tak pernak membenci angin. Dia membiarkan' +
+        ' dirinya jatuh begitu saja. Tak melawan. Mengikhlaskan semuanya.',
+        author: 'Tere Liye, Daun Yang Jatuh Tak Pernah Membenci Angin'
       }
     ], {});
   },
