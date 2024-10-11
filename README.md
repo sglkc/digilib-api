@@ -1,14 +1,14 @@
 <div align=center>
-  <h1>jracademy-api</h1>
-  <p><strong>API untuk aplikasi Yayasan Jalan Rahmat. Dibangun dengan <a href="https://expressjs.com/">Express</a>, <a href="https://sequelize.org/">Sequelize</a> dan MySQL/MariaDB.</strong></p>
+  <h1>digilib-api</h1>
+  <p><strong>API untuk aplikasi Digital Library. Dibangun dengan <a href="https://expressjs.com/">Express</a>, <a href="https://sequelize.org/">Sequelize</a> dan MySQL/MariaDB.</strong></p>
 </div>
 
 ## Instalasi
 
 1. Clone repository ini
 ```sh
-git clone https://github.com/sglkc/jracademy-api.git
-cd jracademy-api
+git clone https://github.com/sglkc/digilib-api.git
+cd digilib-api
 ```
 
 2. Install package dengan npm
@@ -40,11 +40,9 @@ npm start
 
 Untuk melihat seluruh endpoint dengan request beserta response dalam API ini, dapat dilihat di link berikut:
 
-[https://documenter.getpostman.com/view/20300240/2s83tJHWWa](https://documenter.getpostman.com/view/20300240/2s83tJHWWa)
-
 Jika link tidak dapat diakses, dalam folder `/docs` terdapat file Postman Collection:
-- Versi 2.1: [jracademy-api.postman_collection.2.1.json](/docs/jracademy-api.postman_collection.2.1.json)
-- Versi 2.0: [jracademy-api.postman_collection.2.0.json](/docs/jracademy-api.postman_collection.2.0.json)
+- Versi 2.1: [digilib-api.postman_collection.2.1.json](/docs/digilib-api.postman_collection.2.1.json)
+- Versi 2.0: [digilib-api.postman_collection.2.0.json](/docs/digilib-api.postman_collection.2.0.json)
 
 ## Entity Relationship Diagram
 

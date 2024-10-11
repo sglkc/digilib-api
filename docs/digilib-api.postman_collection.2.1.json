@@ -1,9 +1,9 @@
 {
 	"info": {
 		"_postman_id": "edf9bb40-1d75-4308-bc94-3f937c8798c7",
-		"name": "jracademy-api",
-		"description": "Dokumentasi ini berisi endpoint yang tersedia di jracademy-api lengkap beserta dengan response-nya. Berikut beberapa response code yang digunakan dalam API ini.\n\n### Response Codes:\n\n| **Code** | **Arti** |\n| --- | --- |\n| 200 | Sukses. Jika ada data biasanya disimpan di key `result` |\n| 400 | Gagal. Biasanya karena input tidak valid. Cek key `message` jika ada pesan |\n| 401 | Tidak terautentikasi. Request tidak terdapat header Authorization berisi token Bearer |\n| 403 | Forbidden. Route ini hanya bisa diakses oleh Admin |\n| 500 | Server error. Jika terjadi kode ini bisa cek dalam console atau log API |",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"name": "digilib-api",
+		"description": "Dokumentasi ini berisi endpoint yang tersedia di digilib-api lengkap beserta dengan response-nya. Berikut beberapa response code yang digunakan dalam API ini.\n\n### Response Codes:\n\n| **Code** | **Arti** |\n| --- | --- |\n| 200 | Sukses. Jika ada data biasanya disimpan di key `result` |\n| 400 | Gagal. Biasanya karena input tidak valid. Cek key `message` jika ada pesan |\n| 401 | Tidak terautentikasi. Request tidak terdapat header Authorization berisi token Bearer |\n| 403 | Forbidden. Route ini hanya bisa diakses oleh Admin |\n| 500 | Server error. Jika terjadi kode ini bisa cek dalam console atau log API |",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "20300240"
 	},
 	"item": [
@@ -37,8 +37,17 @@
 								}
 							}
 						},
-						"url": "{{base_url}}/auth/register",
-						"description": "Endpoint `POST /auth/register` untuk mendaftarkan user baru. Untuk mengganti user, ubah variable di folder jracademy.\n\n### Response:\n\n``` json\n{\n    \"message\": \"Pesan sukses atau error\",\n    \"token\": \"Jika sukses akan memberikan token JWT\"\n}\n```\n\n### Messages:\n\n`USER_REGISTERED` = user berhasil terdaftar\n\n`EMAIL_DUPLICATE` = email user sudah terdaftar"
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						},
+						"description": "Endpoint `POST /auth/register` untuk mendaftarkan user baru. Untuk mengganti user, ubah variable di folder digilib.\n\n### Response:\n\n``` json\n{\n    \"message\": \"Pesan sukses atau error\",\n    \"token\": \"Jika sukses akan memberikan token JWT\"\n}\n```\n\n### Messages:\n\n`USER_REGISTERED` = user berhasil terdaftar\n\n`EMAIL_DUPLICATE` = email user sudah terdaftar"
 					},
 					"response": []
 				},
@@ -69,7 +78,16 @@
 								}
 							}
 						},
-						"url": "{{base_url}}/auth/login",
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
 						"description": "Endpoint `POST /auth/login` untuk mendapatkan token JWT user yang sudah terdaftar.\n\n### Response:\n\n``` json\n{\n    \"message\": \"Pesan sukses atau error\",\n    \"token\": \"Jika sukses akan memberikan token JWT\"\n}\n```\n\n### Messages:\n\n`EMAIL_NOT_FOUND` = email belum terdaftar\n\n`INVALID_PASSWORD` = password salah\n\n`USER_AUTHENTICATED` = user berhasil masuk"
 					},
 					"response": []
@@ -98,7 +116,16 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{base_url}}/user/",
+						"url": {
+							"raw": "{{base_url}}/user/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								""
+							]
+						},
 						"description": "Endpoint `GET /users/` untuk mendapatkan user yang dipakai.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan objek user\"\n}\n```\n\n### Messages:\n\n`USER_NOT_FOUND` = user tidak dapat ditemukan\n\n`USER_AUTHENTICATED` = user berhasil masuk"
 					},
 					"response": []
@@ -130,7 +157,16 @@
 								}
 							}
 						},
-						"url": "{{base_url}}/user/",
+						"url": {
+							"raw": "{{base_url}}/user/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								""
+							]
+						},
 						"description": "Endpoint `PATCH /users/` untuk memperbarui user yang dipakai.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\",\n  \"result\": \"Jika sukses akan memberikan objek user\"\n}\n```\n\n### Messages:\n\n`USER_UPDATED` = user berhasil diperbarui"
 					},
 					"response": []
@@ -149,7 +185,16 @@
 								}
 							}
 						},
-						"url": "{{base_url}}/user/password",
+						"url": {
+							"raw": "{{base_url}}/user/password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user",
+								"password"
+							]
+						},
 						"description": "Endpoint `PATCH /users/password` untuk memperbarui password user yang dipakai.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\"\n}\n```\n\n### Messages:\n\n`PASSWORD_UPDATED` = password user berhasil diperbarui"
 					},
 					"response": []
@@ -158,9 +203,13 @@
 			"description": "Endpoint `/user` digunakan untuk mendapatkan informasi user dan memperbarui user. Setiap request wajib mempunyai header Authorization berisi Bearer token JWT untuk user yang ingin dimodifikasi.",
 			"auth": {
 				"type": "bearer",
-				"bearer": {
-					"token": "{{token}}"
-				}
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
 			},
 			"event": [
 				{
@@ -231,7 +280,16 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{base_url}}/items/{{item_id}}",
+						"url": {
+							"raw": "{{base_url}}/items/{{item_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"items",
+								"{{item_id}}"
+							]
+						},
 						"description": "Endpoint `GET /items/:item_id` untuk mendapatkan item menggunakan id.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan objek item\"\n}\n```\n\n### Messages:\n\n`ITEM_NOT_FOUND` = item tidak ditemukan"
 					},
 					"response": []
@@ -263,7 +321,16 @@
 								}
 							}
 						},
-						"url": "{{base_url}}/items/",
+						"url": {
+							"raw": "{{base_url}}/items/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"items",
+								""
+							]
+						},
 						"description": "Endpoint `POST /items/` untuk menambahkan item.\n\n### Response\n\n``` json\n{\n   \"message\": \"Pesan sukses atau error\",\n   \"result\": \"Jika sukses memberikan objek item\"\n}\n```\n\n### Messages:\n\n`ITEM_ADDED` = item berhasil ditambah"
 					},
 					"response": []
@@ -282,7 +349,16 @@
 								}
 							}
 						},
-						"url": "{{base_url}}/items/{{item_id}}",
+						"url": {
+							"raw": "{{base_url}}/items/{{item_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"items",
+								"{{item_id}}"
+							]
+						},
 						"description": "Endpoint `PATCH /items/:item_id` untuk memperbarui item.\n\n### Response\n\n``` json\n{\n   \"message\": \"Pesan sukses atau error\",\n   \"result\": \"Jika sukses memberikan objek item\"\n}\n```\n\n### Messages:\n\n`ITEM_UPDATED` = item berhasil diperbarui"
 					},
 					"response": []
@@ -292,7 +368,16 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"url": "{{base_url}}/items/{{item_id}}",
+						"url": {
+							"raw": "{{base_url}}/items/{{item_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"items",
+								"{{item_id}}"
+							]
+						},
 						"description": "Endpoint `DELETE /items/:item_id` untuk menghapus item menggunakan id.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\"\n}\n```\n\n### Messages:\n\n`ITEM_NOT_FOUND` = item tidak ditemukan\n\n`ITEM_DELETED` = item berhasil dihapus"
 					},
 					"response": []
@@ -301,9 +386,13 @@
 			"description": "Endpoint `/items` digunakan untuk mendapatkan item dan memperbarui item. Setiap request wajib mempunyai header Authorization berisi Bearer token JWT.\n\nRequest selain `GET` user harus menjadi admin.",
 			"auth": {
 				"type": "bearer",
-				"bearer": {
-					"token": "{{token}}"
-				}
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
 			},
 			"event": [
 				{
@@ -365,7 +454,16 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{base_url}}/bookmarks/{{item_id}}",
+						"url": {
+							"raw": "{{base_url}}/bookmarks/{{item_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bookmarks",
+								"{{item_id}}"
+							]
+						},
 						"description": "Endpoint `GET /bookmarks/:item_id` untuk mendapatkan apakah user mempunyai bookmark item menggunakan id.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan\",\n}\n```\n\n### Messages\n\n`ADDED_BOOKMARK` = item di bookmark user\n\n`REMOVED_BOOKMARK` = item tidak di bookmark user"
 					},
 					"response": []
@@ -386,7 +484,16 @@
 					"request": {
 						"method": "POST",
 						"header": [],
-						"url": "{{base_url}}/bookmarks/{{item_id}}",
+						"url": {
+							"raw": "{{base_url}}/bookmarks/{{item_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bookmarks",
+								"{{item_id}}"
+							]
+						},
 						"description": "Endpoint `POST /bookmarks/:item_id` untuk menambahkan item ke bookmark user.\n\n### Response\n\n``` json\n{\n   \"message\": \"Pesan sukses atau error\",\n   \"result\": \"Jika sukses memberikan array objek item\"\n}\n```\n\n### Messages\n\n`ADDED_BOOKMARK` = item berhasil ditambahkan ke bookmark\n\n`ITEM_IS_BOOKMARKED` = item sudah dibookmark\n\n`ITEM_NOT_FOUND` = item tidak ditemukan"
 					},
 					"response": []
@@ -396,7 +503,16 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"url": "{{base_url}}/bookmarks/{{item_id}}",
+						"url": {
+							"raw": "{{base_url}}/bookmarks/{{item_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bookmarks",
+								"{{item_id}}"
+							]
+						},
 						"description": "Endpoint `DELETE /bookmarks/:item_id` untuk menghapus item dari bookmark user menggunakan id.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\"\n}\n```\n\n### Messages\n\n`REMOVED_BOOKMARK` = item berhasil dihapus dari bookmark\n\n`ITEM_NOT_BOOKMARKED` = item tidak ada di bookmark user"
 					},
 					"response": []
@@ -405,9 +521,13 @@
 			"description": "Endpoint `/bookmarks` digunakan untuk mendapatkan bookmark dari user dan juga memperbarui bookmark. Setiap request wajib mempunyai header Authorization berisi Bearer token JWT untuk user yang ingin diubah bookmark-nya.",
 			"auth": {
 				"type": "bearer",
-				"bearer": {
-					"token": "{{token}}"
-				}
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
 			},
 			"event": [
 				{
@@ -489,7 +609,16 @@
 								}
 							}
 						},
-						"url": "{{base_url}}/histories/{{item_id}}",
+						"url": {
+							"raw": "{{base_url}}/histories/{{item_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"histories",
+								"{{item_id}}"
+							]
+						},
 						"description": "Endpoint `POST /histories/:item_id` untuk menambahkan item ke history user.\n\n### Response\n\n``` json\n{\n   \"message\": \"Pesan sukses atau error\",\n   \"result\": \"Jika sukses memberikan array berisi objek history\"\n}\n```\n\n### Messages\n\n`ADDED_HISTORY` = berhasil menambahkan item ke history user\n\n`ITEM_NOT_FOUND` = item_id tidak ditemukan"
 					},
 					"response": []
@@ -498,9 +627,13 @@
 			"description": "Endpoint `/histories` digunakan untuk mendapatkan history dari user dan juga menambahkan history. Setiap request wajib mempunyai header Authorization berisi Bearer token JWT untuk user yang ingin ubah history.",
 			"auth": {
 				"type": "bearer",
-				"bearer": {
-					"token": "{{token}}"
-				}
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
 			},
 			"event": [
 				{
@@ -531,7 +664,17 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{base_url}}/files/cover/placeholder-1.jpg",
+						"url": {
+							"raw": "{{base_url}}/files/cover/placeholder-1.jpg",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"files",
+								"cover",
+								"placeholder-1.jpg"
+							]
+						},
 						"description": "Endpoint `/files/:foldername/:filename` untuk mendapatkan file pada folder. Folder ada dua yaitu `cover` dan `media`. Sedangkan file harus diupload sebelumnya.\n\n### Response\n\nBerupa file atau json dengan format\n\n``` json\n{\n  \"message\": \"Pesan error\"\n}\n```"
 					},
 					"response": []
@@ -548,17 +691,25 @@
 									"key": "cover",
 									"description": "File untuk thumbnail item",
 									"type": "file",
-									"src": "/home/sglkc/web/jracademy/jracademy-api/static/cover/13563593.jpg"
+									"src": "/home/sglkc/web/digilib/digilib-api/static/cover/13563593.jpg"
 								},
 								{
 									"key": "media",
 									"description": "File item",
 									"type": "file",
-									"src": "/home/sglkc/web/jracademy/jracademy-api/static/media/Placeholder.pdf"
+									"src": "/home/sglkc/web/digilib/digilib-api/static/media/Placeholder.pdf"
 								}
 							]
 						},
-						"url": "{{base_url}}/files",
+						"url": {
+							"raw": "{{base_url}}/files",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"files"
+							]
+						},
 						"description": "Endpoint `POST /files` untuk mengupload file cover atau media. Auth menggunakan Bearer Token dan user harus seorang admin. **Body yang dipakai multipart/form-data.**\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\"\n}\n```"
 					},
 					"response": []
@@ -574,16 +725,26 @@
 								{
 									"key": "cover",
 									"type": "file",
-									"src": "/home/sglkc/web/jracademy/jracademy-api/static/cover/13563593.jpg"
+									"src": "/home/sglkc/web/digilib/digilib-api/static/cover/13563593.jpg"
 								},
 								{
 									"key": "media",
 									"type": "file",
-									"src": "/home/sglkc/web/jracademy/jracademy-api/static/media/Placeholder.pdf"
+									"src": "/home/sglkc/web/digilib/digilib-api/static/media/Placeholder.pdf"
 								}
 							]
 						},
-						"url": "{{base_url}}/files/media/Placeholder.pdf",
+						"url": {
+							"raw": "{{base_url}}/files/media/Placeholder.pdf",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"files",
+								"media",
+								"Placeholder.pdf"
+							]
+						},
 						"description": "Endpoint `DELETE /files/:foldername/:filename` untuk menghapus item yang telah disimpan. Auth menggunakan Bearer Token dan user harus seorang admin. Body kosong.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\"\n}\n```"
 					},
 					"response": []
@@ -592,9 +753,13 @@
 			"description": "Endpoint `/files` digunakan untuk mengunggah file cover dan media untuk item pada database. Auth menggunakan Bearer Token.\n\nRequest selain `GET` user harus menjadi admin.",
 			"auth": {
 				"type": "bearer",
-				"bearer": {
-					"token": "{{token}}"
-				}
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
 			},
 			"event": [
 				{
@@ -698,7 +863,16 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{base_url}}/quotes/",
+						"url": {
+							"raw": "{{base_url}}/quotes/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"quotes",
+								""
+							]
+						},
 						"description": "Endpoint `GET /quotes/` untuk mendapatkan semua quote dalam database.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan array dari objek quote\",\n  \"count\": \"Jika sukses akan memberikan jumlah seluruh quote di database\"\n}\n\n```"
 					},
 					"response": []
@@ -708,7 +882,16 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{base_url}}/quotes/random",
+						"url": {
+							"raw": "{{base_url}}/quotes/random",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"quotes",
+								"random"
+							]
+						},
 						"description": "Endpoint `GET /quotes/random` untuk mendapatkan quote secara acak.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan error\",\n  \"result\": \"Jika sukses akan memberikan objek quote\"\n}\n\n```"
 					},
 					"response": []
@@ -740,7 +923,16 @@
 								}
 							}
 						},
-						"url": "{{base_url}}/quotes/",
+						"url": {
+							"raw": "{{base_url}}/quotes/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"quotes",
+								""
+							]
+						},
 						"description": "Endpoint `POST /quotes/` untuk menambahkan quote.\n\n### Response\n\n``` json\n{\n   \"message\": \"Pesan sukses atau error\",\n   \"result\": \"Jika sukses memberikan objek quote\"\n}\n\n```\n\n### Messages:\n\n`QUOTE_ADDED` = quote berhasil ditambah"
 					},
 					"response": []
@@ -759,7 +951,16 @@
 								}
 							}
 						},
-						"url": "{{base_url}}/quotes/{{quote_id}}",
+						"url": {
+							"raw": "{{base_url}}/quotes/{{quote_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"quotes",
+								"{{quote_id}}"
+							]
+						},
 						"description": "Endpoint `PATCH /quotes/:quote_id` untuk memperbarui quote.\n\n### Response\n\n``` json\n{\n   \"message\": \"Pesan sukses atau error\"\n}\n\n```\n\n### Messages:\n\n`QUOTE_UPDATED` = quote berhasil diperbarui"
 					},
 					"response": []
@@ -769,7 +970,16 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"url": "{{base_url}}/quotes/{{quote_id}}",
+						"url": {
+							"raw": "{{base_url}}/quotes/{{quote_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"quotes",
+								"{{quote_id}}"
+							]
+						},
 						"description": "Endpoint `DELETE /quotes/:quote_id` untuk menghapus quote menggunakan id.\n\n### Response\n\n``` json\n{\n  \"message\": \"Pesan sukses atau error\"\n}\n\n```\n\n### Messages:\n\n`QUOTE_DELETED` = quote berhasil dihapus"
 					},
 					"response": []
@@ -778,9 +988,13 @@
 			"description": "Endpoint `/quotes` digunakan untuk mendapatkan quote dan memperbarui quote. Setiap request wajib mempunyai header Authorization berisi Bearer token JWT.\n\nRequest selain `GET` user harus menjadi admin.",
 			"auth": {
 				"type": "bearer",
-				"bearer": {
-					"token": "{{token}}"
-				}
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
 			},
 			"event": [
 				{
@@ -827,7 +1041,7 @@
 	"variable": [
 		{
 			"key": "base_url",
-			"value": "https://digilib.jalanrahmat.id/api",
+			"value": "http://localhost:5000/api",
 			"type": "string"
 		},
 		{
