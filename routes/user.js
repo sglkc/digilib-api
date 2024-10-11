@@ -41,7 +41,7 @@ router.post('/password', async (req, res) => {
 
     await transporter.sendMail({
       from: {
-        name: 'Yayasan Jalan Rahmat',
+        name: 'Digital Library',
         address: SMTP_USER
       },
       to: email,

@@ -13,24 +13,24 @@ module.exports = {
      */
     await queryInterface.bulkInsert('items', [
       {
-        title: 'Neuro Psikologi',
-        author: 'Jalaludin Rakhmat',
+        title: 'Metro 2033 Audiobook',
+        author: 'Dmitry Glukhovsky',
         description: 'Ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.',
         cover: 'placeholder-1.jpg',
         media: 'placeholder.mp3',
         type: 'audio',
       },
       {
-        title: 'Doa Bukan Lampu Aladin',
-        author: 'Jalaludin Rakhmat',
+        title: 'Hujan',
+        author: 'Tere Liye',
         description: 'Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolored eos qui ratione voluptatem.',
         cover: 'placeholder-2.jpg',
         media: 'placeholder.pdf',
         type: 'book',
       },
       {
-        title: 'Neuro Psikologi',
-        author: 'Jalaludin Rakhmat',
+        title: 'Kajian Tematik #185',
+        author: 'Khalid Basalamah',
         description: 'Ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.',
         cover: 'placeholder-3.jpg',
         media: 'placeholder.mp4',

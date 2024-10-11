@@ -15,8 +15,6 @@ const corsOptions = {
     'http://localhost:5173',
     'http://localhost:4173',
     'http://localhost:9966',
-    'https://digilib.jalanrahmat.id',
-    'https://api.jalanrahmat.id'
   ],
   credentials: true,
 };
